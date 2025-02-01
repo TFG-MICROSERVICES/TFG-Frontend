@@ -29,6 +29,7 @@ export const Register = () => {
             const response = await postRegister(formValue);
             console.log(response);
             if(response.status === 201) toast.success('Regsitro realizado con éxito');
+            else toast.error(response.message);
         }catch(error){
             console.log(error);
             toast.error('Ha ocurrido un error al registrarte');

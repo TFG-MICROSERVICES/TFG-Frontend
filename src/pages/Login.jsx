@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { LoginContext } from '../context/LoginContext'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { FormProvider } from '../context/FormProvider'
 import { schemaLogin } from '../schemas/schemaLogin.js'
+import { getToken } from '../utils/getToken.js'
+const CURRENT_USER_STORAGE = import.meta.env.VITE_CURRENT_USER_STORAGE;
 
 const initialValue = {
     email: '',
@@ -13,7 +15,22 @@ const initialValue = {
 
 export const Login = () =>{
 
-    const { loading, handleLogin  } = useContext(LoginContext);
+    const { loading, handleLogin, login  } = useContext(LoginContext);
+    const navigate = useNavigate();
+
+
+    useEffect(() =>{
+        if(login && !loading){
+            console.log('LOGIN', login);
+            navigate('/home');
+        }
+        
+        const token = getToken(CURRENT_USER_STORAGE);
+
+        if(token){
+            navigate('/home');
+        }
+    },[login, navigate])
 
     return(
         <>

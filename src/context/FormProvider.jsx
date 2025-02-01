@@ -75,11 +75,6 @@ export const FormProvider = ({children, initialValue, schema, onSubmit, clase}) 
         });
     }
 
-
-    const handleOnSubmit = (event) =>{
-        event.preventDefault();
-    }
-
     return (
         <FormContext.Provider value={{ ...formState, errors: errors, updateFormValue, updateIsTouched }}>
             <form onSubmit={onFormSubmit} className={clase}>
