@@ -4,13 +4,16 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css';
 import App from './App';
 import { LoginProvider } from './context/LoginProvider';
+import { MenuProvider } from './context/MenuProvider';
 
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
     <BrowserRouter>
       <LoginProvider>
-        <App />
+        <MenuProvider>
+          <App />
+        </MenuProvider>
       </LoginProvider>
     </BrowserRouter>
   // </StrictMode>,

@@ -6,8 +6,10 @@ export function getToken(token) {
 
     if(token === CURRENT_USER_STORAGE){
         const token = localStorage.getItem(CURRENT_USER_STORAGE);
+        console.log('Token:', token);
         if(token){
             const user = jwtDecode(token);
+            console.log('User:', user);
             return user;
         }
         return null;

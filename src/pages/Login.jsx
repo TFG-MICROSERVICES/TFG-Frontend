@@ -21,7 +21,6 @@ export const Login = () =>{
 
     useEffect(() =>{
         if(login && !loading){
-            console.log('LOGIN', login);
             navigate('/home');
         }
         
