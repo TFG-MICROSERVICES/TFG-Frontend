@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { MenuContext } from "./MenuContext";
 
-export const MenuProvider = ({ children, initialOptions = null }) => {
-    const [menuState, setMenuState] = useState({
-        isMenuOpen: false,
-    });
-    const [options, setOptions] = useState(initialOptions);
+export const MenuProvider = ({ children }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
-        setMenuState((oldMenuState) => ({
-            ...oldMenuState,
-            isMenuOpen: !oldMenuState.isMenuOpen,
-        }));
+        console.log('TOGGLE MENU');
+        setIsOpen(!isOpen);
     };
 
     return (
-        <MenuContext.Provider value={{ menuState, toggleMenu }}>
+        <MenuContext.Provider value={{ isOpen, toggleMenu }}>
             {children}
         </MenuContext.Provider>
     );
-}
+};

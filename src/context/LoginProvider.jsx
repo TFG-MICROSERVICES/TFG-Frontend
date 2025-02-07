@@ -26,15 +26,12 @@ export const LoginProvider = ({ children }) => {
             toast.success('Inicio de sesión exitoso');
             setLogin(response.user.user);
             localStorage.setItem(CURRENT_USER_STORAGE, JSON.stringify(response.user.token));
-            const token = getToken(CURRENT_USER_STORAGE);
         } catch (error) {
             toast.error(error.message || 'Error en el inicio de sesión');
         } finally {
             setLoading(false);
         }
     }, []);
-
-    console.log('Login:', login);
 
     useEffect(() => {
         const checkToken = async () => {
@@ -50,7 +47,6 @@ export const LoginProvider = ({ children }) => {
                     // Verificar el token y obtener los datos del usuario siempre al inicio
                     const response = await checkAuth();
                     if (response?.status === 200) {
-                        localStorage.setItem(CURRENT_USER_STORAGE, JSON.stringify(response.user.newToken));
                         setLogin(response.user.user);
                         
                         // Solo configurar el intervalo si el token está próximo a expirar
@@ -78,7 +74,7 @@ export const LoginProvider = ({ children }) => {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [navigate]);
+    }, []);
 
     return (
         <LoginContext.Provider value={{ login, setLogin, loading, handleLogin }}>
