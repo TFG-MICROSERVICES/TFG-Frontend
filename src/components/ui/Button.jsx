@@ -1,12 +1,13 @@
-
-export const Button = ({text, className, handleOnClick}) =>{
+export const Button = ({text, clase, handleOnClick}) =>{
     return(
         <div className=" w-full flex justify-center items-center max-w-5xl">
             <button
                 onClick={handleOnClick}
-                className={`border border-slate-300 text-white bg-blue-500 rounded-lg p-2 w-full md:w-1/2 ${className}`}
+                className={`border text-primary bg-transparent border-primary hover:text-white hover:bg-primary rounded-lg p-2 w-full group ${clase}`}
             >
-                {text}
+                <span className="inline-block transition-transform group-hover:scale-105">
+                    {text}
+                </span>
             </button>
         </div>
     )

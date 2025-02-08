@@ -44,38 +44,70 @@ export const Register = () => {
     }
 
     return (
-        <div className="flex flex-col w-full h-screen gap-2 items-center justify-center p-4">   
+        <div className="flex flex-col w-full h-full-screen gap-2 items-center justify-center p-4">   
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Registrarme</h2>
 
             <FormProvider 
                 onSubmit={handleRegister} 
                 initialValue={initialValue} 
                 schema={userSchema} 
-                clase="space-y-4 w-full flex flex-col items-center"
+                clase="space-y-4 w-1/2 flex flex-col items-center"
             >
 
-                <Input 
-                    label="Nombre" 
-                    name="name" 
-                    type="text" 
-                    required 
-                    placeholder="Introduzca su nombre" 
-                />
+                <div className="grid grid-cols-2 w-full justify-center gap-4">
+                    <div className="w-full flex flex-col gap-4">
+                        <Input 
+                            label="Nombre" 
+                            name="name" 
+                            type="text" 
+                            required 
+                            placeholder="Introduzca su nombre" 
+                            clase="w-full"
+                        />
 
-                <Input 
-                    label="Apellidos" 
-                    name="lastName" 
-                    type="text" 
-                    equired 
-                    placeholder="Introduzca sus apellidos" 
-                />
+                        <Input 
+                            label="Contraseña" 
+                            name="password" 
+                            type="password" 
+                            required 
+                            placeholder="Introduzca su contraseña" 
+                        />
 
-                <Input
-                    label="Fecha de nacimiento"
-                    name="birthdate"
-                    type="date"
-                    required
-                />
+                        <Input
+                            label="Fecha de nacimiento"
+                            name="birthdate"
+                            type="date"
+                            required
+                        />
+                    </div>
+
+                    <div className="w-full flex flex-col gap-4">
+                        <Input 
+                            label="Apellidos" 
+                            name="lastName" 
+                            type="text" 
+                            required 
+                            placeholder="Introduzca sus apellidos" 
+                        />
+
+                        
+                        <Input 
+                            label="Confirmar Contraseña" 
+                            name="password_confirm" 
+                            type="password" 
+                            required 
+                            placeholder="Confirme su contraseña" 
+                        />
+
+                        <Input 
+                            label="Número de Teléfono" 
+                            name="phone_number" 
+                            type="phone" 
+                            required 
+                            placeholder="Introduzca su número de teléfono" 
+                        />
+                    </div>
+                </div>
 
                 <Input 
                     label="Correo electrónico" 
@@ -85,35 +117,12 @@ export const Register = () => {
                     placeholder="Introduzca su email" 
                 />
 
-                <Input 
-                    label="Contraseña" 
-                    name="password" 
-                    type="password" 
-                    required 
-                    placeholder="Introduzca su contraseña" 
-                />
-
-                <Input 
-                    label="Confirmar Contraseña" 
-                    name="password_confirm" 
-                    type="password" 
-                    required 
-                    placeholder="Confirme su contraseña" 
-                />
-
-                <Input 
-                    label="Número de Teléfono" 
-                    name="phone_number" 
-                    type="phone" 
-                    required 
-                    placeholder="Introduzca su número de teléfono" 
-                />
-
                 <Select
                     placeholder="Selecciona tu comunidad autónoma"
                     options={comunidades.map(comunidad => ({ value: comunidad.id, label: comunidad.name }))}
                     handleSelectOption={(value) => setSelectedCountry(value)}
                     label="País"
+                    required
                     name="autonomous_region"
                 />
 
@@ -122,6 +131,7 @@ export const Register = () => {
                         placeholder="Selecciona tu ciudad"
                         options={comunidades.find(comunidad => comunidad.id === selectedCountry).provincias}
                         label="Ciudad"
+                        required
                         name="city"
                     />
                 )}
@@ -129,15 +139,13 @@ export const Register = () => {
                 <Button
                     type="submit"
                     text="Registrarme"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                    className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all"
                 />
             </FormProvider>
 
-            <hr className="my-6 border-gray-300" />
-
-            <p className="text-center text-gray-600">
+            <p className="text-center text-gray-400">
                 ¿Ya tienes cuenta?{' '}
-                <Link to="/login" className="text-blue-600 hover:underline">
+                <Link to="/login" className="text-primary hover:text-blue-700">
                     Iniciar sesión
                 </Link>
             </p>

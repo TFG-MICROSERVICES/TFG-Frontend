@@ -12,7 +12,7 @@ export const LayoutBase = () => {
         <div className="flex flex-col h-screen">
             <header className="fixed top-0 left-0 w-full h-24 flex items-center shadow-lg z-40 bg-white p-4">
                 <Menu size={40} className="text-gray-600 mr-4 cursor-pointer" onClick={toggleMenu}/>
-                <h1 className="text-left font-bold text-3xl text-blue-400">SPORT CONNECT</h1>
+                <h1 className="text-left font-bold text-3xl text-primary">SPORT CONNECT</h1>
                 <div className="absolute top-0 right-0 p-4 flex flex-col items-end gap-2">
                     <div className="flex items-center gap-2">
                         <User size={40} className="text-gray-600" />

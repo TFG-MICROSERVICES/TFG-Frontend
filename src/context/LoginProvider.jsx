@@ -1,83 +1,64 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LoginContext } from './LoginContext';
-import { postLogin } from '../api/request/post/postLogin';
-import { getToken } from '../utils/getToken';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { checkAuth } from '../api/request/get/checkAuth';
+import { getToken } from '../utils/getToken';
 
 const CURRENT_USER_STORAGE = import.meta.env.VITE_CURRENT_USER_STORAGE;
-const EXPIRATION_THRESHOLD = 5 * 60 * 1000;
 
 export const LoginProvider = ({ children }) => {
     const navigate = useNavigate();
-    const [login, setLogin] = useState(null);
+    const [login, setLogin] = useState();
     const [loading, setLoading] = useState(true);
-    const intervalRef = useRef(null);
 
-    const handleLogin = useCallback(async (credentials) => {
-        try {
-            const response = await postLogin(credentials);
-
-            if (!response || response.status !== 200) {
-                throw new Error('Error al iniciar sesión');
-            }
-
-            toast.success('Inicio de sesión exitoso');
+    const auth = useCallback(async () =>{
+        try{
+            const response = await checkAuth();
             setLogin(response.user.user);
-            localStorage.setItem(CURRENT_USER_STORAGE, JSON.stringify(response.user.token));
-        } catch (error) {
-            toast.error(error.message || 'Error en el inicio de sesión');
-        } finally {
-            setLoading(false);
+        }catch(error){
+            console.log(error);
         }
     }, []);
 
     useEffect(() => {
-        const checkToken = async () => {
-            setLoading(true);
-            try {
-                const token = getToken(CURRENT_USER_STORAGE);
+        if(!login) navigate('/login');
 
-                if(token){
+        const checkTokenExpiration = async () =>{
+            try{
+                const token = getToken();
 
-                    const tokenExpirationTime = token.exp * 1000;
-                    const currentTime = Date.now();
-    
-                    // Verificar el token y obtener los datos del usuario siempre al inicio
-                    const response = await checkAuth();
-                    if (response?.status === 200) {
-                        setLogin(response.user.user);
-                        
-                        // Solo configurar el intervalo si el token está próximo a expirar
-                        if (tokenExpirationTime < currentTime + EXPIRATION_THRESHOLD) {
-                            intervalRef.current = setInterval(checkToken, 4 * 60 * 1000);
-                        }
-                    } else {
-                        throw new Error('Authentication check failed');
-                    }
+                if(!token || !token.exp){
+                    localStorage.removeItem(CURRENT_USER_STORAGE);
+                    await auth();
                 }
-            } catch (error) {
-                console.error('Auth error:', error);
-                localStorage.removeItem(CURRENT_USER_STORAGE);
+    
+                if(token || token.exp){
+                    if(token.exp * 1000 >= Date.now() ){
+                        localStorage.removeItem(CURRENT_USER_STORAGE);
+                        await auth();
+                    }
+                }else{
+                    setLogin(null);
+                    await auth();
+                }
+            }catch(error){
+                console.log(error);
                 setLogin(null);
-                navigate('/login');
-            } finally {
-                setLoading(false);
             }
-        };
+        }
 
-        checkToken();
+        const interval = setInterval(checkTokenExpiration, 4 * 60 * 1000);
 
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
+        return () => clearInterval(interval);
+
     }, []);
 
+    useEffect(() =>{
+        auth();
+    },[])
+
     return (
-        <LoginContext.Provider value={{ login, setLogin, loading, handleLogin }}>
+        <LoginContext.Provider value={{ login, setLogin, loading }}>
             {children}
         </LoginContext.Provider>
     );

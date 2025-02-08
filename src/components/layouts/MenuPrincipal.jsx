@@ -1,6 +1,11 @@
+import { useContext } from "react";
 import { MenuItem } from "../ui/MenuItem";
+import { LoginContext } from "../../context/LoginContext";
 
 export const MenuPrincipal = () => {
+
+    const { login } = useContext(LoginContext);
+    console.log(login);
 
     const menuItems = [
         { text: "Inicio", to: "/home" },
@@ -9,7 +14,7 @@ export const MenuPrincipal = () => {
         { text: "Torneos", to: "/torneos" },
         { text: "Ligas", to: "/ligas" },
         { text: "Eventos", to: "/eventos-puntuales" },
-        { text: "Usuarios", to: "/usuarios" },
+        ...(login?.admin ? [{ text: "Usuarios", to: "/usuarios" }] : [])
     ];
     
     return (

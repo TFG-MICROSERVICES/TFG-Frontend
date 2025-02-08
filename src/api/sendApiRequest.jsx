@@ -38,26 +38,19 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
         body,
     });
 
-    const newTokenBearer = response.headers.get('Authorization');
-    if(newTokenBearer){
-        const newToken = newTokenBearer.split(' ')[1];
-        try{
-            const dataToken = jwtDecode(newToken);
-            if(dataToken && dataToken.exp){
-                const expirationTimestamp = dataToken.exp;
-                const currentTimeStamp = Math.floor(Date.now()/1000);
+    const nuevoTokenBearer = response?.headers?.get('authorization');
+    console.log(response?.headers);
 
-                if(currentTimeStamp >= expirationTimestamp){
-                    localStorage.removeItem(CURRENT_USER_STORAGE);
-                }else{
-                    localStorage.setItem(CURRENT_USER_STORAGE, 'Bearer ' + newToken);
-                }
-            }else{
-                localStorage.removeItem(CURRENT_USER_STORAGE);
-            }
-        }catch(error){
+    if (nuevoTokenBearer) {
+        const nuevoToken = nuevoTokenBearer.split(' ')[1];
+        console.log(nuevoToken);
+        try {
+            localStorage.setItem(CURRENT_USER_STORAGE, nuevoToken);
+        } catch (error) {
+            console.error('Error al decodificar el token:', error);
             localStorage.removeItem(CURRENT_USER_STORAGE);
         }
     }
+
     return await response.json();
 }

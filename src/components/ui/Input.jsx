@@ -17,10 +17,10 @@ export const Input = ({type, name, placeholder, required = false, label, clase, 
 
     return(
         <div className="w-full max-w-5xl items-center flex flex-col gap-2">
-            <label className="text-left w-full md:w-1/2" htmlFor={name}>{label}</label>
+            <label className="text-left w-full" htmlFor={name}>{label} {required ? "*" : ""} </label>
             <input
                 disabled={isLoading || disabled}
-                className={`border border-slate-400 h-10 w-full md:w-1/2 rounded-lg p-2 ${clase}`}
+                className={`border border-slate-400 h-10 w-full rounded-lg p-2 ${clase}`}
                 placeholder={placeholder}
                 name={name}
                 type={type}
@@ -29,7 +29,7 @@ export const Input = ({type, name, placeholder, required = false, label, clase, 
                 onChange={(event) => updateRequest(event)}
             />
             {(isTouched || isTouchedInput) && errors?.[name] && !isLoading && 
-                <div className="w-full md:w-1/2 flex justify-start">
+                <div className="w-full flex justify-start">
                     <span className="text-red-500 text-sm">{errors[name]}</span>
                 </div>
             }
