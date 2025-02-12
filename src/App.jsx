@@ -2,11 +2,13 @@ import{ Routes, Route } from 'react-router-dom';
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Register } from './pages/Register';
+import { Registration } from './pages/Registration';
 import { Sports } from './pages/Sports';
 import { ToastContainer } from 'react-toastify';
 import { LayoutBase } from './components/layouts/LayoutBase';
 import { Users } from './pages/Users';
 import { Teams } from './pages/Teams';
+import { GestionSport } from './pages/GestionSport';
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
         <Route path='/register' element={<Register />} /> 
         <Route path='/' element={<LayoutBase />}>
           <Route path='/home' element={<Home />} />
+          <Route path='/google/register' element={<Registration />} />
           <Route path='/deportes' element={<Sports />} />
+          <Route path='/gestionar/deporte' element={<GestionSport />} />
           <Route path='/equipos' element={<Teams />} />
           <Route path='/usuarios' element={<Users />} /> 
           <Route path='/*' element={<Login />} />

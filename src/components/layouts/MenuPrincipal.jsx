@@ -5,7 +5,6 @@ import { LoginContext } from "../../context/LoginContext";
 export const MenuPrincipal = () => {
 
     const { login } = useContext(LoginContext);
-    console.log(login);
 
     const menuItems = [
         { text: "Inicio", to: "/home" },

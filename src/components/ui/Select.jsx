@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { FormContext } from '../../context/FormContext';
 
-export const Select = ({placeholder, options, disabled, required, label, name, handleSelectOption}) =>{
+export const Select = ({placeholder, options, disabled, required, label, name, handleSelectOption, clase}) =>{
     const [isTouchedInput, setIsTouchedInput] = useState(false);
     const { formValue, errors, updateFormValue, isTouched, isLoading } = useContext(FormContext);
 
@@ -17,7 +17,7 @@ export const Select = ({placeholder, options, disabled, required, label, name, h
 
 
     return (
-        <div className="w-full max-w-5xl items-center flex flex-col gap-2">
+        <div className={`w-full max-w-5xl items-center flex flex-col gap-2 ${clase}`}>
             <label className="text-left w-full" htmlFor={name}>{label} {required ? "*" : ""}</label>
             <select 
                 className="border border-slate-400 h-10 w-full rounded-lg p-2 bg-white"

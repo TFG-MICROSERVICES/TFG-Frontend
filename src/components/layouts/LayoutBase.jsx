@@ -3,10 +3,12 @@ import { User, Menu } from "lucide-react";
 import { useContext } from "react";
 import { MenuContext } from "../../context/MenuContext";
 import { MenuPrincipal } from "./MenuPrincipal";
+import { useLogout } from "../../hooks/useLogout";
 
 export const LayoutBase = () => {
     
     const { isOpen, toggleMenu } = useContext(MenuContext);
+    const { handleLogout } = useLogout();
     
     return (
         <div className="flex flex-col h-screen">
@@ -17,7 +19,10 @@ export const LayoutBase = () => {
                     <div className="flex items-center gap-2">
                         <User size={40} className="text-gray-600" />
                     </div>
-                    <button className="text-sm text-gray-600 hover:text-gray-800">
+                    <button 
+                        className="text-sm text-gray-600 hover:text-gray-800"
+                        onClick={() => handleLogout()}
+                    >
                         Cerrar sesión
                     </button>
                 </div>

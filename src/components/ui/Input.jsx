@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react"
 import { FormContext } from "../../context/FormContext"
 
 
-export const Input = ({type, name, placeholder, required = false, label, clase, disabled}) =>{
+export const Input = ({type, name, placeholder, required = false, label, clase = "w-full", disabled}) =>{
     const [isTouchedInput, setIsTouchedInput] = useState(false);
     const { formValue, errors, updateFormValue, isTouched, isLoading } = useContext(FormContext);
 

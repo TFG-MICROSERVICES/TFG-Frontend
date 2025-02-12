@@ -39,7 +39,6 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
     });
 
     const nuevoTokenBearer = response?.headers?.get('authorization');
-    console.log(response?.headers);
 
     if (nuevoTokenBearer) {
         const nuevoToken = nuevoTokenBearer.split(' ')[1];

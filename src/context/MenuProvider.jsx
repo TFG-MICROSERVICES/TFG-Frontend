@@ -5,7 +5,6 @@ export const MenuProvider = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
-        console.log('TOGGLE MENU');
         setIsOpen(!isOpen);
     };
 

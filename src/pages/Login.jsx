@@ -8,6 +8,7 @@ import { schemaLogin } from '../schemas/schemaLogin.js'
 import { getToken } from '../utils/getToken.js'
 import { postLogin } from '../api/request/post/postLogin.jsx'
 import { toast } from 'react-toastify';
+import { authGoogle } from '../api/request/get/authGoogle.jsx'
 
 const CURRENT_USER_STORAGE = import.meta.env.VITE_CURRENT_USER_STORAGE;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -20,11 +21,12 @@ const initialValue = {
 
 export const Login = () =>{
 
-    const { loading, setLogin, login  } = useContext(LoginContext);
+    const { loading, setLogin, login, setLoading  } = useContext(LoginContext);
     const navigate = useNavigate();
 
     const handleLogin = useCallback(async (credentials) => {
         try {
+            setLoading(true);
             const response = await postLogin(credentials);
 
             if (!response || response.status !== 200) {
@@ -36,6 +38,8 @@ export const Login = () =>{
             localStorage.setItem(CURRENT_USER_STORAGE, JSON.stringify(response.user.token));
         } catch (error) {
             toast.error(error.message || 'Error en el inicio de sesión');
+        }finally{
+            setLoading(false);
         }
     }, []);
 
@@ -44,29 +48,44 @@ export const Login = () =>{
         window.location.href = authUrl;
     }
 
-    const handleGoogleCallback = useEffect(() => {
+    const handleGoogleCallback = useCallback( async() => {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
-
-        console.log(code);
     
         if (code) {
-
+            try{
+                const response = await authGoogle(code);
+                if(response.status === 200) toast.success('Inicio de sesión exitoso');
+                else toast.error('Error en el inicio de sesión');
+                setLogin(response.data.user);
+                localStorage.setItem(CURRENT_USER_STORAGE,response.data.token);
+                if(response.data.user.new){
+                    navigate('/google/register');
+                }else{
+                    navigate('/home');
+                }
+            }catch(error){
+                console.log(error);
+            }
         }
     }, []);
+
+    useEffect(() => {
+        handleGoogleCallback();
+    },[]);
 
 
     useEffect(() =>{
         if(login && !loading){
             navigate('/home');
         }
-        
+
         const token = getToken(CURRENT_USER_STORAGE);
 
         if(token){
             navigate('/home');
         }
-    },[login, navigate])
+    },[login])
 
     return(
         <>
