@@ -11,8 +11,9 @@ import { toast } from 'react-toastify';
 import { authGoogle } from '../api/request/get/authGoogle.jsx'
 
 const CURRENT_USER_STORAGE = import.meta.env.VITE_CURRENT_USER_STORAGE;
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const GOOGLE_CALLBACK_URL = import.meta.env.VITE_GOOGLE_CALLBACK_URL;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_CURRENT_GOOGLE_CLIENT_ID;
+const GOOGLE_CALLBACK_URL = import.meta.env.VITE_CURRENT_GOOGLE_CALLBACK_URL;
+
 
 const initialValue = {
     email: '',
@@ -120,7 +121,7 @@ export const Login = () =>{
                 <Button
                     type="submit"
                     text="Iniciar Sesión"
-                    clase="text-primary"
+                    clase="text-primary w-full"
                 />
 
                 <div className="flex items-center my-4 w-full">

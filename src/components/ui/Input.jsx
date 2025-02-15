@@ -29,7 +29,7 @@ export const Input = ({type, name, placeholder, required = false, label, clase =
                 onChange={(event) => updateRequest(event)}
             />
             {(isTouched || isTouchedInput) && errors?.[name] && !isLoading && 
-                <div className="w-full flex justify-start">
+                <div className="w-full flex justify-start" style={{ minHeight: '1.25rem' }}>
                     <span className="text-red-500 text-sm">{errors[name]}</span>
                 </div>
             }

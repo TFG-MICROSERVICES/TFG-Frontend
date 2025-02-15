@@ -44,14 +44,14 @@ export const Register = () => {
     }
 
     return (
-        <div className="flex flex-col w-full h-full-screen gap-2 items-center justify-center p-4">   
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Registrarme</h2>
+        <div className="flex flex-col min-h-screen w-full h-full-screen gap-2 items-center justify-center p-4">   
+            <h2 className="text-4xl text-primary mb-4">Registrarme</h2>
 
             <FormProvider 
                 onSubmit={handleRegister} 
                 initialValue={initialValue} 
                 schema={userSchema} 
-                clase="space-y-4 w-1/2 flex flex-col items-center"
+                clase="space-y-4 w-1/2 flex flex-col items-center justify-center"
             >
 
                 <div className="grid grid-cols-2 w-full justify-center gap-4">
@@ -139,11 +139,11 @@ export const Register = () => {
                 <Button
                     type="submit"
                     text="Registrarme"
-                    className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all"
+                    className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all mt-10"
                 />
             </FormProvider>
 
-            <p className="text-center text-gray-400">
+            <p className="text-center text-gray-400 mt-5">
                 ¿Ya tienes cuenta?{' '}
                 <Link to="/login" className="text-primary hover:text-blue-700">
                     Iniciar sesión

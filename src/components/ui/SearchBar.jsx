@@ -1,10 +1,10 @@
 import { Icon, Search } from "lucide-react"
 import { useSearch } from "../../hooks/useSearch"
 
-export const SearchBar = ({setSearch, text}) =>{
+export const SearchBar = ({setSearch, text, clase}) =>{
     
     return (
-        <div className="w-full relative">
+        <div className={`w-full relative ${clase}`}>
             <input 
                 type="text" 
                 placeholder={text}
