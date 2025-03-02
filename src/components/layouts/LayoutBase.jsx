@@ -1,43 +1,59 @@
-import { Outlet } from "react-router-dom";
-import { User, Menu } from "lucide-react";
-import { useContext } from "react";
-import { MenuContext } from "../../context/MenuContext";
-import { MenuPrincipal } from "./MenuPrincipal";
-import { useLogout } from "../../hooks/useLogout";
+import { Outlet } from 'react-router-dom';
+import { User, Menu } from 'lucide-react';
+import { useContext } from 'react';
+import { MenuContext } from '../../context/MenuContext';
+import { MenuPrincipal } from './MenuPrincipal';
+import { useLogout } from '../../hooks/useLogout';
+import { useMobile } from '../../hooks/useMobile';
+import { LoginContext } from '../../context/LoginContext';
 
 export const LayoutBase = () => {
-    
     const { isOpen, toggleMenu } = useContext(MenuContext);
     const { handleLogout } = useLogout();
-    
+    const { isMobile } = useMobile();
+    const { login } = useContext(LoginContext);
+
+    console.log(login);
+
     return (
-        <div className="flex flex-col h-screen">
-            <header className="fixed top-0 left-0 w-full h-24 flex items-center shadow-lg z-40 bg-white p-4">
-                <Menu size={40} className="text-gray-600 mr-4 cursor-pointer" onClick={toggleMenu}/>
-                <h1 className="text-left font-bold text-3xl text-primary">SPORT CONNECT</h1>
-                <div className="absolute top-0 right-0 p-4 flex flex-col items-end gap-2">
-                    <div className="flex items-center gap-2">
-                        <User size={40} className="text-gray-600" />
+        <div className="flex flex-col h-screen w-full">
+            <header className="fixed top-0 left-0 w-full h-24 flex items-center shadow-lg z-40 bg-white px-2">
+                <div className="w-full flex items-center justify-between max-w-full px-2">
+                    <div className="flex items-center w-full">
+                        {!isMobile && <Menu size={40} className="text-gray-600 mr-4 cursor-pointer" onClick={toggleMenu} />}
+                        <h1 className="text-left font-bold text-xl  md:text-3xl text-primary w-full">SPORT CONNECT</h1>
                     </div>
-                    <button 
-                        className="text-sm text-gray-600 hover:text-gray-800"
-                        onClick={() => handleLogout()}
-                    >
-                        Cerrar sesión
-                    </button>
+                    <div className="flex flex-col gap-2 items-end w-full md:w-1/4">
+                        <div className="flex items-end justify-end w-full gap-2">
+                            <div className="flex flex-col items-center md:items-end md:w-full">
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm text-gray-600">{login?.name + ' ' + login?.lastName}</p>
+                                    <User size={24} className="text-gray-600 md:items-center" />
+                                </div>
+                                <button className="text-sm text-primary w-full md:text-end" onClick={() => handleLogout()}>
+                                    Cerrar sesión
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
-            
+
             <div className="flex pt-24 h-full">
-                {isOpen && (
-                    <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white transition-all shadow-lg duration-100 z-30">
+                {!isMobile && isOpen && (
+                    <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white transition-all shadow-lg duration-100 z-30 p-2">
                         <MenuPrincipal />
                     </aside>
                 )}
-                <main className={`flex-1 transition-all ${isOpen ? "ml-56" : "ml-0"} p-4 bg-slate-100`}>
+                {isMobile && (
+                    <aside className="fixed bottom-0 left-0 w-full h-auto bg-white transition-all shadow-lg duration-100 z-30">
+                        <MenuPrincipal />
+                    </aside>
+                )}
+                <main className={`flex-1 transition-all ${isOpen && !isMobile ? 'ml-56' : 'ml-0'} p-4 bg-slate-100`}>
                     <Outlet />
                 </main>
             </div>
         </div>
     );
-}
+};
