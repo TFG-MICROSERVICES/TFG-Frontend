@@ -15,10 +15,10 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
 
     let body;
 
-    if(requestObject){
-        if(requestObject instanceof FormData){
+    if (requestObject) {
+        if (requestObject instanceof FormData) {
             body = requestObject;
-        }else{
+        } else {
             body = JSON.stringify(requestObject);
             headers['Content-type'] = 'application/json';
         }
@@ -26,7 +26,7 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
 
     const token = localStorage.getItem(CURRENT_USER_STORAGE);
 
-    if(token){
+    if (token) {
         headers['Authorization'] = `Bearer ${token}`;
         headers['Cache-Control'] = 'no-store';
     }
@@ -42,7 +42,6 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
 
     if (nuevoTokenBearer) {
         const nuevoToken = nuevoTokenBearer.split(' ')[1];
-        console.log(nuevoToken);
         try {
             localStorage.setItem(CURRENT_USER_STORAGE, nuevoToken);
         } catch (error) {
@@ -52,4 +51,4 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
     }
 
     return await response.json();
-}
+};

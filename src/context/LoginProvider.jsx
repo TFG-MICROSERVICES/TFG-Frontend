@@ -10,13 +10,14 @@ export const LoginProvider = ({ children }) => {
     const navigate = useNavigate();
     const [login, setLogin] = useState();
     const [loading, setLoading] = useState(true);
+    const intervalRef = useRef(null);
 
     const auth = useCallback(async () => {
         try {
             const response = await checkAuth();
-            console.log(response);
             setLogin(response.user);
         } catch (error) {
+            console.log(error);
             setLogin(null);
         } finally {
             setLoading(false);
@@ -32,10 +33,11 @@ export const LoginProvider = ({ children }) => {
                     await auth();
                 }
 
+                const expirationTime = token.exp;
+                const currentTimestamp = Math.floor(Date.now() / 1000);
+
                 if (token || token.exp) {
-                    if (token.exp * 1000 >= Date.now() + 4 * 60 * 1000) {
-                        console.log('Expiracion de token', token.exp);
-                        console.log('4 minutos antes', Date.now() + 4 * 60 * 1000);
+                    if (currentTimestamp >= expirationTime) {
                         localStorage.removeItem(CURRENT_USER_STORAGE);
                         await auth();
                     }
@@ -49,9 +51,20 @@ export const LoginProvider = ({ children }) => {
             }
         };
 
-        const interval = setInterval(checkTokenExpiration, 4 * 60 * 1000);
+        const handleStorageChange = async (e) => {
+            if (e.key === CURRENT_USER_STORAGE) {
+                await auth();
+                setLoading(false);
+            }
+        };
 
-        return () => clearInterval(interval);
+        window.addEventListener('storage', handleStorageChange);
+        intervalRef.current = setInterval(checkTokenExpiration, 4 * 60 * 1000);
+
+        return () => {
+            clearInterval(intervalRef.current);
+            window.removeEventListener('storage', handleStorageChange);
+        };
     }, []);
 
     useEffect(() => {

@@ -13,8 +13,6 @@ export const LayoutBase = () => {
     const { isMobile } = useMobile();
     const { login } = useContext(LoginContext);
 
-    console.log(login);
-
     return (
         <div className="flex flex-col h-screen w-full">
             <header className="fixed top-0 left-0 w-full h-24 flex items-center shadow-lg z-40 bg-white px-2">
