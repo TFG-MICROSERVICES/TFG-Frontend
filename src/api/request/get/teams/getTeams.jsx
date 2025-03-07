@@ -6,5 +6,5 @@ export const getTeams = async (search = null) => {
     if (search) {
         params.append('search', search);
     }
-    return sendApiRequest(METHOD.GET, API_HOST + `/api/teams${params ? '?' + params.toString() : ''}`);
+    return sendApiRequest(METHOD.GET, API_HOST + `/api/team${params ? '?' + params.toString() : ''}`);
 };

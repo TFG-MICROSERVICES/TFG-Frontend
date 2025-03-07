@@ -26,7 +26,6 @@ export const Input = ({ type, name, placeholder, required = false, label, clase 
                 name={name}
                 type={type}
                 value={formValue[name]}
-                required={required}
                 onChange={(event) => updateRequest(event)}
                 min={min}
                 max={max}

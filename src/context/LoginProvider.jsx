@@ -75,7 +75,7 @@ export const LoginProvider = ({ children }) => {
         if (!login && !loading && !window.location.pathname.includes('register')) {
             navigate('/login');
         }
-    }, [navigate, login]);
+    }, [navigate, login, loading]);
 
     return <LoginContext.Provider value={{ login, setLogin, loading, setLoading }}>{children}</LoginContext.Provider>;
 };

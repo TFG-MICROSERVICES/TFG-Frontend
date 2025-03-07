@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button';
 import { toast } from 'react-toastify';
 import { LoginContext } from '../context/LoginContext';
 import { useContext, useState, useEffect } from 'react';
-import { userSchema } from '../schemas/schemaRegister.js';
+import { userSchema } from '../api/schemas/schemaRegister.js';
 import { comunidades } from '../constants/locations.js';
 import { postRegisterGoogle } from '../api/request/post/postRegisterGoogle.jsx';
 import { useNavigate } from 'react-router-dom';

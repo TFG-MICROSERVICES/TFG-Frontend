@@ -6,11 +6,10 @@ import { useEffect, useState, useContext } from 'react';
 import { FormProvider } from '../context/FormProvider';
 import { postRegister } from '../api/request/post/postRegister.jsx';
 import { comunidades } from '../constants/locations.js';
-import { userSchema } from '../schemas/schemaRegister.js';
+import { userSchema } from '../api/schemas/schemaRegister.js';
 import { toast } from 'react-toastify';
 import { LoginContext } from '../context/LoginContext';
 import { useNavigate } from 'react-router-dom';
-
 
 const initialValue = {
     name: '',
@@ -30,96 +29,52 @@ export const Register = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(login) navigate('/home');
+        if (login) navigate('/home');
     }, []);
 
     const handleRegister = async (formValue) => {
-        try{
+        try {
             const response = await postRegister(formValue);
-            if(response.status === 201) toast.success('Regsitro realizado con éxito');
+            if (response.status === 201) toast.success('Regsitro realizado con éxito');
             else toast.error(response.message);
-        }catch(error){
-            toast.error('Ha ocurrido un error al registrarte');
+        } catch (error) {
+            toast.error(error);
         }
-    }
+    };
 
     return (
-        <div className="flex flex-col min-h-screen w-full h-full-screen gap-2 items-center justify-center p-4">   
+        <div className="flex flex-col min-h-screen w-full h-full-screen gap-2 items-center justify-center p-4">
             <h2 className="text-4xl text-primary mb-4">Registrarme</h2>
 
-            <FormProvider 
-                onSubmit={handleRegister} 
-                initialValue={initialValue} 
-                schema={userSchema} 
+            <FormProvider
+                onSubmit={handleRegister}
+                initialValue={initialValue}
+                schema={userSchema}
                 clase="space-y-4 w-1/2 flex flex-col items-center justify-center"
             >
-
                 <div className="grid grid-cols-2 w-full justify-center gap-4">
                     <div className="w-full flex flex-col gap-4">
-                        <Input 
-                            label="Nombre" 
-                            name="name" 
-                            type="text" 
-                            required 
-                            placeholder="Introduzca su nombre" 
-                            clase="w-full"
-                        />
+                        <Input label="Nombre" name="name" type="text" required placeholder="Introduzca su nombre" clase="w-full" />
 
-                        <Input 
-                            label="Contraseña" 
-                            name="password" 
-                            type="password" 
-                            required 
-                            placeholder="Introduzca su contraseña" 
-                        />
+                        <Input label="Contraseña" name="password" type="password" required placeholder="Introduzca su contraseña" />
 
-                        <Input
-                            label="Fecha de nacimiento"
-                            name="birthdate"
-                            type="date"
-                            required
-                        />
+                        <Input label="Fecha de nacimiento" name="birthdate" type="date" required />
                     </div>
 
                     <div className="w-full flex flex-col gap-4">
-                        <Input 
-                            label="Apellidos" 
-                            name="lastName" 
-                            type="text" 
-                            required 
-                            placeholder="Introduzca sus apellidos" 
-                        />
+                        <Input label="Apellidos" name="lastName" type="text" required placeholder="Introduzca sus apellidos" />
 
-                        
-                        <Input 
-                            label="Confirmar Contraseña" 
-                            name="password_confirm" 
-                            type="password" 
-                            required 
-                            placeholder="Confirme su contraseña" 
-                        />
+                        <Input label="Confirmar Contraseña" name="password_confirm" type="password" required placeholder="Confirme su contraseña" />
 
-                        <Input 
-                            label="Número de Teléfono" 
-                            name="phone_number" 
-                            type="phone" 
-                            required 
-                            placeholder="Introduzca su número de teléfono" 
-                        />
+                        <Input label="Número de Teléfono" name="phone_number" type="phone" required placeholder="Introduzca su número de teléfono" />
                     </div>
                 </div>
 
-                <Input 
-                    label="Correo electrónico" 
-                    name="email" 
-                    type="email" 
-                    required 
-                    placeholder="Introduzca su email" 
-                />
+                <Input label="Correo electrónico" name="email" type="email" required placeholder="Introduzca su email" />
 
                 <Select
                     placeholder="Selecciona tu comunidad autónoma"
-                    options={comunidades.map(comunidad => ({ value: comunidad.id, label: comunidad.name }))}
+                    options={comunidades.map((comunidad) => ({ value: comunidad.id, label: comunidad.name }))}
                     handleSelectOption={(value) => setSelectedCountry(value)}
                     label="País"
                     required
@@ -129,7 +84,7 @@ export const Register = () => {
                 {selectedCountry && (
                     <Select
                         placeholder="Selecciona tu ciudad"
-                        options={comunidades.find(comunidad => comunidad.id === selectedCountry).provincias}
+                        options={comunidades.find((comunidad) => comunidad.id === selectedCountry).provincias}
                         label="Ciudad"
                         required
                         name="city"
@@ -150,5 +105,5 @@ export const Register = () => {
                 </Link>
             </p>
         </div>
-    )
-}
+    );
+};

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { CardTeam } from '../components/teams/CardTeam';
 import { Button } from '../components/ui/Button';
 import { LoginContext } from '../context/LoginContext';
-// import { TeamForm } from '../components/forms/TeamForm';
+import { TeamForm } from '../components/forms/TeamForm';
 import { useMobile } from '../hooks/useMobile';
 import { deleteTeam } from '../api/request/delete/teams/deleteTeam';
 
@@ -27,7 +27,7 @@ export const Teams = () => {
                 toast.error('Error al buscar equipos');
                 return;
             }
-            const teamsData = response.teams?.teams || [];
+            const teamsData = response.teams?.data?.teams || [];
             setTeams(teamsData);
         } catch (error) {
             console.log(error);
@@ -65,7 +65,7 @@ export const Teams = () => {
 
     return (
         <>
-            {/* <TeamForm teamId={teamId} openModal={openModal} setOpenModal={setOpenModal} refetch={fetchTeams} /> */}
+            <TeamForm teamId={teamId} openModal={openModal} setOpenModal={setOpenModal} refetch={fetchTeams} />
             <div>
                 <div className="w-full flex flex-row gap-2 justify-between">
                     <SearchBar setSearch={handleSearch} text="Buscar equipo..." clase="w-full md:w-60" />

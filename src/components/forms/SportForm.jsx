@@ -6,7 +6,7 @@ import { Select } from '../ui/Select';
 import { useState, useEffect } from 'react';
 import { postCreateSport } from '../../api/request/post/sports/createSport';
 import { toast } from 'react-toastify';
-import { sportSchema } from '../../api/schemas/sportSchema';
+import { sportSchema } from '../../api/schemas/schemaSport';
 import { getSport } from '../../api/request/get/sports/getSport';
 import { updateSport } from '../../api/request/put/sports/updateSport';
 
@@ -73,7 +73,6 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) 
 
     useEffect(() => {
         if (sportId && openModal) {
-            console.log('fetching sport');
             fetchSport();
         }
     }, [sportId, openModal]);

@@ -4,7 +4,7 @@ import { Input } from '../components/ui/Input';
 import { LoginContext } from '../context/LoginContext';
 import { useContext, useEffect, useCallback } from 'react';
 import { FormProvider } from '../context/FormProvider';
-import { schemaLogin } from '../schemas/schemaLogin.js';
+import { schemaLogin } from '../api/schemas/schemaLogin.js';
 import { getToken } from '../utils/getToken.js';
 import { postLogin } from '../api/request/post/postLogin.jsx';
 import { toast } from 'react-toastify';
@@ -27,6 +27,7 @@ export const Login = () => {
         try {
             setLoading(true);
             const response = await postLogin(credentials);
+            console.log(response);
 
             if (!response || response.status !== 200) {
                 throw new Error('Error al iniciar sesión');
