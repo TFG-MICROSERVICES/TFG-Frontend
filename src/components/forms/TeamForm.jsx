@@ -3,7 +3,7 @@ import { FormProvider } from '../../context/FormProvider';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { postCreateTeam } from '../../api/request/post/teams/createTeam';
 import { toast } from 'react-toastify';
 import { teamSchema } from '../../api/schemas/schemaTeam';
@@ -20,7 +20,7 @@ export const TeamForm = ({ teamId = null, openModal, setOpenModal, refetch }) =>
     const [sports, setSports] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchTeam = async () => {
+    const fetchTeam = useCallback(async () => {
         try {
             setIsLoading(true);
             const response = await getTeam(teamId);
@@ -28,13 +28,13 @@ export const TeamForm = ({ teamId = null, openModal, setOpenModal, refetch }) =>
                 toast.error('Error al obtener el equipo');
                 return;
             }
-            setTeam(response.team.team);
+            setTeam(response.team);
         } catch (error) {
             console.log(error);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [teamId]);
 
     const fetchSports = async () => {
         try {

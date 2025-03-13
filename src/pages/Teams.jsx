@@ -10,6 +10,7 @@ import { LoginContext } from '../context/LoginContext';
 import { TeamForm } from '../components/forms/TeamForm';
 import { useMobile } from '../hooks/useMobile';
 import { deleteTeam } from '../api/request/delete/teams/deleteTeam';
+import { postJoinTeam } from '../api/request/post/teams/joinTeam';
 
 export const Teams = () => {
     const [teams, setTeams] = useState([]);
@@ -23,11 +24,12 @@ export const Teams = () => {
     const fetchTeams = async (searchTerm = '') => {
         try {
             const response = await getTeams(searchTerm);
+            console.log(response);
             if (response.status !== 200 && response.status !== 404) {
                 toast.error('Error al buscar equipos');
                 return;
             }
-            const teamsData = response.teams?.data?.teams || [];
+            const teamsData = response.teams || [];
             setTeams(teamsData);
         } catch (error) {
             console.log(error);
@@ -55,6 +57,20 @@ export const Teams = () => {
         }
     };
 
+    const handleOnJoin = async (teamId, sportId) => {
+        try {
+            const response = await postJoinTeam({ team_id: teamId, user_id: login.id, status: '1', sport_id: sportId });
+            if (response.status !== 201) {
+                toast.error(response.message);
+                return;
+            }
+            toast.success('Equipo unido correctamente');
+            fetchTeams();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleOpenModal = () => {
         setOpenModal(true);
     };
@@ -72,7 +88,13 @@ export const Teams = () => {
                     {login?.admin && <Button handleOnClick={handleOpenModal} text={isMobile ? '+' : 'Crear nuevo equipo'} clase="w-1/2 md:w-44" />}
                 </div>
                 {teams.map((team) => (
-                    <CardTeam key={team.id} team={team} handleOnEdit={() => handleOnEdit(team.id)} handleOnDelete={() => handleOnDelete(team.id)} />
+                    <CardTeam
+                        key={team.id}
+                        team={team}
+                        handleOnEdit={() => handleOnEdit(team.id)}
+                        handleOnDelete={() => handleOnDelete(team.id)}
+                        handleOnJoin={() => handleOnJoin(team.id, team.sport.id)}
+                    />
                 ))}
             </div>
         </>
