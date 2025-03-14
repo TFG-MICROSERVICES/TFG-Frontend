@@ -28,22 +28,18 @@ export const LoginProvider = ({ children }) => {
         const checkTokenExpiration = async () => {
             try {
                 const token = getToken();
-                if (!token || !token.exp) {
+                if (!token) {
                     localStorage.removeItem(CURRENT_USER_STORAGE);
-                    await auth();
+                    setLogin(null);
+                    return;
                 }
 
                 const expirationTime = token.exp;
                 const currentTimestamp = Math.floor(Date.now() / 1000);
 
-                if (token || token.exp) {
-                    if (currentTimestamp >= expirationTime) {
-                        localStorage.removeItem(CURRENT_USER_STORAGE);
-                        await auth();
-                    }
-                } else {
+                if (currentTimestamp >= expirationTime) {
+                    localStorage.removeItem(CURRENT_USER_STORAGE);
                     setLogin(null);
-                    await auth();
                 }
             } catch (error) {
                 console.log(error);

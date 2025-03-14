@@ -1,7 +1,7 @@
-import { Trash, UserPlus } from 'lucide-react';
+import { Trash, UserPlus, Lock, Users } from 'lucide-react';
 import { useContext } from 'react';
 import { LoginContext } from '../../context/LoginContext';
-export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin }) => {
+export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, handleOnRequest, showRequests }) => {
     const { login } = useContext(LoginContext);
     return (
         <div
@@ -13,25 +13,53 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin }) =
                 <p className="text-sm text-gray-600">{team.sport.name}</p>
                 <p className="text-sm text-gray-600">{team.description}</p>
             </div>
-            {login?.admin && (
-                <>
-                    <div className="flex gap-2 items-center">
-                        <button
+            <div className="flex gap-2 items-center">
+                {team.request_teams?.length > 0 && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            showRequests();
+                        }}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors relative inline-flex items-center justify-center"
+                        title="Solicitudes pendientes"
+                    >
+                        <Users className="w-5 h-5 text-primary" />
+                        {team.request_teams?.length > 0 && (
+                            <div className="absolute -top-1 -right-1 bg-primary text-white text-xs font-medium rounded-full min-w-[20px] h-[20px] flex items-center justify-center">
+                                {team.request_teams?.length}
+                            </div>
+                        )}
+                    </button>
+                )}
+                {team.public && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleOnJoin();
+                        }}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        title="Unirse al equipo"
+                    >
+                        <UserPlus className="w-5 h-5 text-blue-600" />
+                    </button>
+                )}
+                {!team.public && (
+                    <div className="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Equipo privado">
+                        <Lock
+                            className="w-5 h-5 text-gray-600"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleOnJoin();
+                                handleOnRequest();
                             }}
-                            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                            title="Unirse al equipo"
-                        >
-                            <UserPlus className="w-5 h-5 text-blue-600" />
-                        </button>
-                        <div className="justify-center items-center cursor-pointer text-red-500" onClick={() => handleOnDelete()}>
-                            <Trash size={24} />
-                        </div>
+                        />
                     </div>
-                </>
-            )}
+                )}
+                {login?.admin && (
+                    <div className="justify-center items-center cursor-pointer text-red-500" onClick={() => handleOnDelete()}>
+                        <Trash size={24} />
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

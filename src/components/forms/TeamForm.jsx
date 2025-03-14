@@ -3,14 +3,15 @@ import { FormProvider } from '../../context/FormProvider';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { postCreateTeam } from '../../api/request/post/teams/createTeam';
 import { toast } from 'react-toastify';
 import { teamSchema } from '../../api/schemas/schemaTeam';
 import { getTeam } from '../../api/request/get/teams/getTeam';
 import { updateTeam } from '../../api/request/put/teams/updateTeam';
 import { getSports } from '../../api/request/get/sports/getSports';
-
+import { UserTeam } from '../teams/UserTeam';
+import { LoginContext } from '../../context/LoginContext';
 export const TeamForm = ({ teamId = null, openModal, setOpenModal, refetch }) => {
     const [team, setTeam] = useState({
         name: '',
@@ -19,11 +20,12 @@ export const TeamForm = ({ teamId = null, openModal, setOpenModal, refetch }) =>
     });
     const [sports, setSports] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const { login } = useContext(LoginContext);
     const fetchTeam = useCallback(async () => {
         try {
             setIsLoading(true);
             const response = await getTeam(teamId);
+            console.log(response);
             if (response.status !== 200) {
                 toast.error('Error al obtener el equipo');
                 return;
@@ -91,29 +93,60 @@ export const TeamForm = ({ teamId = null, openModal, setOpenModal, refetch }) =>
             <Dialog open={openModal} onOpenChange={setOpenModal}>
                 <DialogContent className="bg-white">
                     <DialogHeader>
-                        <DialogTitle>Crear nuevo equipo</DialogTitle>
-                        <DialogDescription>Ingresa los datos del nuevo equipo</DialogDescription>
+                        <DialogTitle>{!login?.admin ? 'Datos del equipo' : teamId ? 'Editar equipo' : 'Crear nuevo equipo'}</DialogTitle>
+                        <DialogDescription>
+                            {!login?.admin
+                                ? 'Aqui puedes ver los datos del equipo y sus miembros'
+                                : teamId
+                                ? 'Edita los datos del equipo'
+                                : 'Ingresa los datos del nuevo equipo'}
+                        </DialogDescription>
                     </DialogHeader>
                     <FormProvider initialValue={team} clase="w-full items-center" onSubmit={handleSubmit} schema={teamSchema}>
                         <div className="grid grid-cols-1 w-full justify-center items-center gap-4">
-                            <Input label="Nombre" name="name" type="text" placeholder="Introduzca el nombre del equipo" required />
+                            <Input
+                                label="Nombre"
+                                name="name"
+                                type="text"
+                                placeholder="Introduzca el nombre del equipo"
+                                required
+                                disabled={!login?.admin}
+                            />
 
-                            <Select label="Deporte" name="sport_id" options={sports} required />
+                            <Select label="Deporte" name="sport_id" options={sports} required disabled={!login?.admin} />
 
                             <div className="flex w-full justify-between items-center">
                                 <label htmlFor="public" className="text-sm">
                                     ¿El equipo será público?
                                 </label>
                                 <div className="flex justify-end">
-                                    <Input name="public" type="checkbox" placeholder="¿El equipo será público?" clase="w-[15px] h-[15px]" />
+                                    <Input
+                                        name="public"
+                                        type="checkbox"
+                                        placeholder="¿El equipo será público?"
+                                        clase="w-[15px] h-[15px]"
+                                        disabled={!login?.admin}
+                                    />
                                 </div>
                             </div>
 
-                            <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
-                                <Button type="submit" text={teamId ? 'Actualizar equipo' : 'Registrar equipo'} clase="w-full" />
-                            </div>
+                            {login?.admin && (
+                                <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
+                                    <Button type="submit" text={teamId ? 'Actualizar equipo' : 'Registrar equipo'} clase="w-full" />
+                                </div>
+                            )}
                         </div>
                     </FormProvider>
+                    <div className="mt-4">
+                        <h3 className="font-medium text-sm mb-2">Miembros del equipo</h3>
+                        <div className="max-h-[200px] overflow-y-auto rounded-lg border border-gray-200">
+                            {team.user_teams?.length > 0 ? (
+                                team.user_teams.map((userTeam) => <UserTeam key={userTeam.id} userTeam={userTeam} />)
+                            ) : (
+                                <p className="text-center text-gray-500 p-4">No hay miembros en el equipo</p>
+                            )}
+                        </div>
+                    </div>
                 </DialogContent>
             </Dialog>
         </>

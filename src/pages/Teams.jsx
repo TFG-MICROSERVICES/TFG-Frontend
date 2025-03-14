@@ -11,20 +11,22 @@ import { TeamForm } from '../components/forms/TeamForm';
 import { useMobile } from '../hooks/useMobile';
 import { deleteTeam } from '../api/request/delete/teams/deleteTeam';
 import { postJoinTeam } from '../api/request/post/teams/joinTeam';
-
+import { postRequestTeam } from '../api/request/post/teams/requestTeam';
+import { Requests } from '../components/teams/Requests';
 export const Teams = () => {
     const [teams, setTeams] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [teamId, setTeamId] = useState(0);
+    const [showModalRequests, setShowModalRequests] = useState(false);
+    const [requests, setRequests] = useState([]);
     const { search, handleSearch } = useSearch('');
     const debounceSearch = useDebounce(search, 300);
-    const [teamId, setTeamId] = useState(0);
     const { login } = useContext(LoginContext);
     const { isMobile } = useMobile();
 
     const fetchTeams = async (searchTerm = '') => {
         try {
             const response = await getTeams(searchTerm);
-            console.log(response);
             if (response.status !== 200 && response.status !== 404) {
                 toast.error('Error al buscar equipos');
                 return;
@@ -71,6 +73,33 @@ export const Teams = () => {
         }
     };
 
+    const handleOnRequest = async (teamId, sportId) => {
+        try {
+            const response = await postRequestTeam({
+                team_id: teamId,
+                user_id: login.id,
+                sport_id: sportId,
+                status: '0',
+                description: 'Solicitud de ingreso al equipo',
+            });
+            console.log(response);
+            if (response.status !== 201) {
+                toast.error(response.message);
+                return;
+            }
+            toast.success('Solicitud enviada correctamente');
+            fetchTeams();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleRequestModal = (team) => {
+        setTeamId(team.id);
+        setRequests(team.request_teams);
+        setShowModalRequests(true);
+    };
+
     const handleOpenModal = () => {
         setOpenModal(true);
     };
@@ -82,6 +111,7 @@ export const Teams = () => {
     return (
         <>
             <TeamForm teamId={teamId} openModal={openModal} setOpenModal={setOpenModal} refetch={fetchTeams} />
+            <Requests openModal={showModalRequests} setOpenModal={setShowModalRequests} requests={requests} refetch={fetchTeams} />
             <div>
                 <div className="w-full flex flex-row gap-2 justify-between">
                     <SearchBar setSearch={handleSearch} text="Buscar equipo..." clase="w-full md:w-60" />
@@ -94,6 +124,8 @@ export const Teams = () => {
                         handleOnEdit={() => handleOnEdit(team.id)}
                         handleOnDelete={() => handleOnDelete(team.id)}
                         handleOnJoin={() => handleOnJoin(team.id, team.sport.id)}
+                        handleOnRequest={() => handleOnRequest(team.id, team.sport.id)}
+                        showRequests={() => handleRequestModal(team)}
                     />
                 ))}
             </div>

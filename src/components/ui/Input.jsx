@@ -6,8 +6,12 @@ export const Input = ({ type, name, placeholder, required = false, label, clase 
     const { formValue, errors, updateFormValue, isTouched, isLoading } = useContext(FormContext);
 
     const updateRequest = ({ target }) => {
-        if (!isTouchedInput) setIsTouchedInput(true);
-        updateFormValue({ [name]: target.value });
+        if (type === 'checkbox') {
+            updateFormValue({ [name]: target.checked });
+        } else {
+            if (!isTouchedInput) setIsTouchedInput(true);
+            updateFormValue({ [name]: target.value });
+        }
     };
 
     useEffect(() => {
@@ -25,10 +29,12 @@ export const Input = ({ type, name, placeholder, required = false, label, clase 
                 placeholder={placeholder}
                 name={name}
                 type={type}
+                checked={formValue[name]}
                 value={formValue[name]}
                 onChange={(event) => updateRequest(event)}
                 min={min}
                 max={max}
+                defaultChecked={formValue[name]}
             />
             {(isTouched || isTouchedInput) && errors?.[name] && !isLoading && (
                 <div className="w-full flex justify-start" style={{ minHeight: '1.25rem' }}>
