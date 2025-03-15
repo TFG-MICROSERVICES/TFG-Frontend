@@ -34,7 +34,6 @@ export const Input = ({ type, name, placeholder, required = false, label, clase 
                 onChange={(event) => updateRequest(event)}
                 min={min}
                 max={max}
-                defaultChecked={formValue[name]}
             />
             {(isTouched || isTouchedInput) && errors?.[name] && !isLoading && (
                 <div className="w-full flex justify-start" style={{ minHeight: '1.25rem' }}>

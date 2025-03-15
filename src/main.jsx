@@ -1,20 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom' 
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { LoginProvider } from './context/LoginProvider';
 import { MenuProvider } from './context/MenuProvider';
-
-
+import { SportProvider } from './context/SportProvider';
 createRoot(document.getElementById('root')).render(
-  // <StrictMode>
     <BrowserRouter>
-      <LoginProvider>
-        <MenuProvider>
-          <App />
-        </MenuProvider>
-      </LoginProvider>
+        <LoginProvider>
+            <MenuProvider>
+                <SportProvider>
+                    <App />
+                </SportProvider>
+            </MenuProvider>
+        </LoginProvider>
     </BrowserRouter>
-  // </StrictMode>,
-)
+);

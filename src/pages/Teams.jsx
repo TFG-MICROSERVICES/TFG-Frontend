@@ -13,8 +13,11 @@ import { deleteTeam } from '../api/request/delete/teams/deleteTeam';
 import { postJoinTeam } from '../api/request/post/teams/joinTeam';
 import { postRequestTeam } from '../api/request/post/teams/requestTeam';
 import { Requests } from '../components/teams/Requests';
+import { SportContext } from '../context/SportContext';
+
 export const Teams = () => {
     const [teams, setTeams] = useState([]);
+    const [sportId, setSportId] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [teamId, setTeamId] = useState(0);
     const [showModalRequests, setShowModalRequests] = useState(false);
@@ -23,10 +26,10 @@ export const Teams = () => {
     const debounceSearch = useDebounce(search, 300);
     const { login } = useContext(LoginContext);
     const { isMobile } = useMobile();
-
+    const { sports } = useContext(SportContext);
     const fetchTeams = async (searchTerm = '') => {
         try {
-            const response = await getTeams(searchTerm);
+            const response = await getTeams(searchTerm, sportId);
             if (response.status !== 200 && response.status !== 404) {
                 toast.error('Error al buscar equipos');
                 return;
@@ -61,7 +64,7 @@ export const Teams = () => {
 
     const handleOnJoin = async (teamId, sportId) => {
         try {
-            const response = await postJoinTeam({ team_id: teamId, user_id: login.id, status: '1', sport_id: sportId });
+            const response = await postJoinTeam({ team_id: teamId, user_email: login.email, status: '1', sport_id: sportId });
             if (response.status !== 201) {
                 toast.error(response.message);
                 return;
@@ -73,16 +76,15 @@ export const Teams = () => {
         }
     };
 
-    const handleOnRequest = async (teamId, sportId) => {
+    const handleOnRequest = async (teamId, sportId, message) => {
         try {
             const response = await postRequestTeam({
                 team_id: teamId,
-                user_id: login.id,
+                user_email: login.email,
                 sport_id: sportId,
                 status: '0',
-                description: 'Solicitud de ingreso al equipo',
+                description: message || 'Solicitud de ingreso al equipo',
             });
-            console.log(response);
             if (response.status !== 201) {
                 toast.error(response.message);
                 return;
@@ -104,18 +106,37 @@ export const Teams = () => {
         setOpenModal(true);
     };
 
+    const handleCloseModal = () => {
+        setTeamId(0);
+        setOpenModal(false);
+    };
+
+    const handleSportChange = (sportId) => {
+        setSportId(sportId);
+    };
+
     useEffect(() => {
-        fetchTeams(debounceSearch);
-    }, [debounceSearch]);
+        fetchTeams(debounceSearch, sportId);
+    }, [debounceSearch, sportId]);
 
     return (
         <>
-            <TeamForm teamId={teamId} openModal={openModal} setOpenModal={setOpenModal} refetch={fetchTeams} />
+            <TeamForm teamId={teamId} openModal={openModal} closeModal={handleCloseModal} setOpenModal={handleOpenModal} refetch={fetchTeams} />
             <Requests openModal={showModalRequests} setOpenModal={setShowModalRequests} requests={requests} refetch={fetchTeams} />
             <div>
                 <div className="w-full flex flex-row gap-2 justify-between">
-                    <SearchBar setSearch={handleSearch} text="Buscar equipo..." clase="w-full md:w-60" />
-                    {login?.admin && <Button handleOnClick={handleOpenModal} text={isMobile ? '+' : 'Crear nuevo equipo'} clase="w-1/2 md:w-44" />}
+                    <div className="flex flex-row gap-2">
+                        <SearchBar setSearch={handleSearch} text="Buscar equipo..." clase="w-full md:w-60" />
+                        <select className="w-full md:w-60 rounded-lg" onChange={(e) => handleSportChange(e.target.value)}>
+                            <option value="">Todos los deportes</option>
+                            {sports.map((sport) => (
+                                <option key={sport.id} value={sport.id}>
+                                    {sport.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <Button handleOnClick={handleOpenModal} text={isMobile ? '+' : 'Crear nuevo equipo'} clase="w-1/2 md:w-44" />
                 </div>
                 {teams.map((team) => (
                     <CardTeam
@@ -124,8 +145,8 @@ export const Teams = () => {
                         handleOnEdit={() => handleOnEdit(team.id)}
                         handleOnDelete={() => handleOnDelete(team.id)}
                         handleOnJoin={() => handleOnJoin(team.id, team.sport.id)}
-                        handleOnRequest={() => handleOnRequest(team.id, team.sport.id)}
-                        showRequests={() => handleRequestModal(team)}
+                        handleOnRequest={handleOnRequest}
+                        showRequests={handleRequestModal}
                     />
                 ))}
             </div>

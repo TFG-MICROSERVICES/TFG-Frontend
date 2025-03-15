@@ -6,10 +6,9 @@ export const teamSchema = Joi.object({
         'string.base': 'El nombre debe ser una cadena',
         'string.max': 'El nombre debe tener máximo 255 caracteres',
     }),
-    sport_id: Joi.string().max(255).required().messages({
+    sport_id: Joi.number().required().messages({
         'any.required': 'El ID del deporte es requerido',
-        'string.base': 'El ID del deporte debe ser una cadena',
-        'string.max': 'El ID del deporte debe tener máximo 255 caracteres',
+        'number.base': 'El ID del deporte debe ser un número',
     }),
     public: Joi.boolean().default(true).required().messages({
         'any.required': 'El campo público es requerido',

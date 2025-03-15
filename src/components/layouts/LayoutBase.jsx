@@ -14,9 +14,9 @@ export const LayoutBase = () => {
     const { login } = useContext(LoginContext);
 
     return (
-        <div className="flex flex-col h-screen w-full">
-            <header className="fixed top-0 left-0 w-full h-24 flex items-center shadow-lg z-40 bg-white px-2">
-                <div className="w-full flex items-center justify-between max-w-full px-2">
+        <div className="flex flex-col min-h-screen w-screen overflow-x-hidden">
+            <header className="fixed top-0 left-0 right-0 h-24 flex items-center shadow-lg z-40 bg-white px-2">
+                <div className="w-full flex items-center justify-between px-2">
                     <div className="flex items-center w-full">
                         {!isMobile && <Menu size={40} className="text-gray-600 mr-4 cursor-pointer" onClick={toggleMenu} />}
                         <h1 className="text-left font-bold text-xl  md:text-3xl text-primary w-full">SPORT CONNECT</h1>
@@ -37,19 +37,21 @@ export const LayoutBase = () => {
                 </div>
             </header>
 
-            <div className="flex pt-24 h-full">
+            <div className="flex pt-24 min-h-[calc(100vh-6rem)] w-full">
                 {!isMobile && isOpen && (
-                    <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white transition-all shadow-lg duration-100 z-30 p-2">
+                    <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white shadow-lg z-30 p-2">
                         <MenuPrincipal />
                     </aside>
                 )}
                 {isMobile && (
-                    <aside className="fixed bottom-0 left-0 w-full h-auto bg-white transition-all shadow-lg duration-100 z-30">
+                    <aside className="fixed bottom-0 left-0 w-full h-auto bg-white shadow-lg z-30">
                         <MenuPrincipal />
                     </aside>
                 )}
-                <main className={`flex-1 transition-all ${isOpen && !isMobile ? 'ml-56' : 'ml-0'} p-4 bg-slate-100`}>
-                    <Outlet />
+                <main className={`flex-1 w-full transition-all duration-300 p-4 bg-slate-100 ${isOpen && !isMobile ? 'ml-56' : 'ml-0'}`}>
+                    <div className="w-full max-w-[2000px] mx-auto">
+                        <Outlet />
+                    </div>
                 </main>
             </div>
         </div>

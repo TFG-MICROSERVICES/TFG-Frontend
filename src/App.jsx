@@ -15,9 +15,9 @@ function App() {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/google/register" element={<Registration />} />
                 <Route path="/" element={<LayoutBase />}>
                     <Route path="/home" element={<Home />} />
-                    <Route path="/google/register" element={<Registration />} />
                     <Route path="/deportes" element={<Sports />} />
                     <Route path="/equipos" element={<Teams />} />
                     <Route path="/usuarios" element={<Users />} />

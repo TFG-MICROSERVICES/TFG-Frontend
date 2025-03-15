@@ -55,13 +55,18 @@ export const Login = () => {
         if (code) {
             try {
                 const response = await authGoogle(code);
-                if (response.status === 200) toast.success('Inicio de sesión exitoso');
-                else toast.error('Error en el inicio de sesión');
-                setLogin(response.data.user);
-                localStorage.setItem(CURRENT_USER_STORAGE, response.data.token);
+                console.log(response);
+                if (response.status !== 200 && response.status !== 201) {
+                    toast.error(response.message);
+                    return;
+                }
                 if (response.data.user.new) {
-                    navigate('/google/register');
+                    navigate(`/google/register?email=${response.data.user.email}`);
                 } else {
+                    setLogin(response.data.user);
+                    localStorage.setItem(CURRENT_USER_STORAGE, response.data.token);
+                    if (response.status === 200) toast.success('Inicio de sesión exitoso');
+                    else toast.error('Error en el inicio de sesión');
                     navigate('/home');
                 }
             } catch (error) {
