@@ -1,7 +1,7 @@
 export const comunidades = [
     {
         id: 'Seleccionar',
-        name: 'Selecciona su comunidad autónoma',
+        name: 'Seleccione su comunidad autónoma',
     },
     {
         id: 'Andalucía',
