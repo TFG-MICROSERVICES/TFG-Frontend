@@ -1,5 +1,8 @@
-
 export const comunidades = [
+    {
+        id: 'Seleccionar',
+        name: 'Selecciona su comunidad autónoma',
+    },
     {
         id: 'Andalucía',
         name: 'Andalucía',
@@ -11,8 +14,8 @@ export const comunidades = [
             { value: 'Huelva', label: 'Huelva' },
             { value: 'Jaén', label: 'Jaén' },
             { value: 'Málaga', label: 'Málaga' },
-            { value: 'Sevilla', label: 'Sevilla' }
-        ]
+            { value: 'Sevilla', label: 'Sevilla' },
+        ],
     },
     {
         id: 'Aragón',
@@ -20,18 +23,18 @@ export const comunidades = [
         provincias: [
             { value: 'Huesca', label: 'Huesca' },
             { value: 'Teruel', label: 'Teruel' },
-            { value: 'Zaragoza', label: 'Zaragoza' }
-        ]
+            { value: 'Zaragoza', label: 'Zaragoza' },
+        ],
     },
     {
         id: 'Asturias',
         name: 'Asturias',
-        provincias: [{ value: 'Asturias', label: 'Asturias' }]
+        provincias: [{ value: 'Asturias', label: 'Asturias' }],
     },
     {
         id: 'Cantabria',
         name: 'Cantabria',
-        provincias: [{ value: 'Cantabria', label: 'Cantabria' }]
+        provincias: [{ value: 'Cantabria', label: 'Cantabria' }],
     },
     {
         id: 'Castilla y León',
@@ -45,8 +48,8 @@ export const comunidades = [
             { value: 'Segovia', label: 'Segovia' },
             { value: 'Soria', label: 'Soria' },
             { value: 'Valladolid', label: 'Valladolid' },
-            { value: 'Zamora', label: 'Zamora' }
-        ]
+            { value: 'Zamora', label: 'Zamora' },
+        ],
     },
     {
         id: 'Castilla-La Mancha',
@@ -56,8 +59,8 @@ export const comunidades = [
             { value: 'Ciudad Real', label: 'Ciudad Real' },
             { value: 'Cuenca', label: 'Cuenca' },
             { value: 'Guadalajara', label: 'Guadalajara' },
-            { value: 'Toledo', label: 'Toledo' }
-        ]
+            { value: 'Toledo', label: 'Toledo' },
+        ],
     },
     {
         id: 'Cataluña',
@@ -66,16 +69,16 @@ export const comunidades = [
             { value: 'Barcelona', label: 'Barcelona' },
             { value: 'Girona', label: 'Girona' },
             { value: 'Lleida', label: 'Lleida' },
-            { value: 'Tarragona', label: 'Tarragona' }
-        ]
+            { value: 'Tarragona', label: 'Tarragona' },
+        ],
     },
     {
         id: 'Extremadura',
         name: 'Extremadura',
         provincias: [
             { value: 'Badajoz', label: 'Badajoz' },
-            { value: 'Cáceres', label: 'Cáceres' }
-        ]
+            { value: 'Cáceres', label: 'Cáceres' },
+        ],
     },
     {
         id: 'Galicia',
@@ -84,28 +87,28 @@ export const comunidades = [
             { value: 'A Coruña', label: 'A Coruña' },
             { value: 'Lugo', label: 'Lugo' },
             { value: 'Ourense', label: 'Ourense' },
-            { value: 'Pontevedra', label: 'Pontevedra' }
-        ]
+            { value: 'Pontevedra', label: 'Pontevedra' },
+        ],
     },
     {
         id: 'Madrid',
         name: 'Madrid',
-        provincias: [{ value: 'Madrid', label: 'Madrid' }]
+        provincias: [{ value: 'Madrid', label: 'Madrid' }],
     },
     {
         id: 'Murcia',
         name: 'Murcia',
-        provincias: [{ value: 'Murcia', label: 'Murcia' }]
+        provincias: [{ value: 'Murcia', label: 'Murcia' }],
     },
     {
         id: 'Navarra',
         name: 'Navarra',
-        provincias: [{ value: 'Navarra', label: 'Navarra' }]
+        provincias: [{ value: 'Navarra', label: 'Navarra' }],
     },
     {
         id: 'La Rioja',
         name: 'La Rioja',
-        provincias: [{ value: 'La Rioja', label: 'La Rioja' }]
+        provincias: [{ value: 'La Rioja', label: 'La Rioja' }],
     },
     {
         id: 'País Vasco',
@@ -113,8 +116,8 @@ export const comunidades = [
         provincias: [
             { value: 'Álava', label: 'Álava' },
             { value: 'Gipuzkoa', label: 'Gipuzkoa' },
-            { value: 'Bizkaia', label: 'Bizkaia' }
-        ]
+            { value: 'Bizkaia', label: 'Bizkaia' },
+        ],
     },
     {
         id: 'Valencia',
@@ -122,30 +125,30 @@ export const comunidades = [
         provincias: [
             { value: 'Alicante', label: 'Alicante' },
             { value: 'Castellón', label: 'Castellón' },
-            { value: 'Valencia', label: 'Valencia' }
-        ]
+            { value: 'Valencia', label: 'Valencia' },
+        ],
     },
     {
         id: 'Canarias',
         name: 'Canarias',
         provincias: [
             { value: 'Las Palmas', label: 'Las Palmas' },
-            { value: 'Santa Cruz de Tenerife', label: 'Santa Cruz de Tenerife' }
-        ]
+            { value: 'Santa Cruz de Tenerife', label: 'Santa Cruz de Tenerife' },
+        ],
     },
     {
         id: 'Baleares',
         name: 'Islas Baleares',
-        provincias: [{ value: 'Islas Baleares', label: 'Islas Baleares' }]
+        provincias: [{ value: 'Islas Baleares', label: 'Islas Baleares' }],
     },
     {
         id: 'Ceuta',
         name: 'Ceuta',
-        provincias: [{ value: 'Ceuta', label: 'Ceuta' }]
+        provincias: [{ value: 'Ceuta', label: 'Ceuta' }],
     },
     {
         id: 'Melilla',
         name: 'Melilla',
-        provincias: [{ value: 'Melilla', label: 'Melilla' }]
-    }
+        provincias: [{ value: 'Melilla', label: 'Melilla' }],
+    },
 ];
