@@ -1,10 +1,18 @@
-export const Loader = () => {
+import { Loader2 } from 'lucide-react';
+
+export function BlueLoader({ size = 'md', showText = true }) {
+    const sizeClasses = {
+        sm: 'w-8 h-8',
+        md: 'w-12 h-12',
+        lg: 'w-20 h-20',
+    };
+
     return (
-        <div className="flex justify-center items-center h-40 bg-gray-900 rounded-lg">
-            <div className="relative w-16 h-16">
-                <div className="absolute top-0 left-0 w-full h-full border-4 border-gray-700 rounded-full"></div>
-                <div className="absolute top-0 left-0 w-full h-full border-4 border-white rounded-full animate-spin border-t-transparent"></div>
+        <div className="fixed inset-0 flex items-center justify-center bg-white/80 z-50">
+            <div className="flex flex-col items-center justify-center gap-2">
+                <Loader2 className={`${sizeClasses[size]} text-blue-600 animate-spin`} />
+                {showText && <p className="text-blue-600 font-medium">Cargando</p>}
             </div>
         </div>
     );
-};
+}

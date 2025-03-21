@@ -50,7 +50,7 @@ export const LoginProvider = ({ children }) => {
         const handleStorageChange = async (e) => {
             if (e.key === CURRENT_USER_STORAGE) {
                 await auth();
-                setLoading(false);
+                setLoading(true);
             }
         };
 
