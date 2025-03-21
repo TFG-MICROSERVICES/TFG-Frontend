@@ -48,5 +48,7 @@ export const sendApiRequest = async (method, endpoint, requestObject) => {
         }
     }
 
+    console.log(response);
+
     return await response.json();
 };
