@@ -32,8 +32,8 @@ export const userSchema = Joi.object({
         'string.max': 'La ciudad debe tener como máximo 255 caracteres',
     }),
     autonomous_region: Joi.string().max(255).required().messages({
-        'any.required': 'El país es obligatorio',
-        'string.base': 'El país debe ser un texto',
-        'string.max': 'El país debe tener como máximo 255 caracteres',
+        'string.empty': 'La comunidad autónoma es obligatoria',
+        'string.base': 'La comunidad autónoma debe ser un texto',
+        'string.max': 'La comunidad autónoma debe tener como máximo 255 caracteres',
     }),
 });

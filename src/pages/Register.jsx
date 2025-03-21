@@ -107,17 +107,17 @@ export const Register = () => {
                         <Input label="Fecha de nacimiento" name="birthdate" type="date" required />
 
                         <Select
-                            placeholder="Selecciona tu comunidad autónoma"
+                            defaultValue="Selecciona tu comunidad autónoma"
                             options={comunidades.map((comunidad) => ({ value: comunidad.id, label: comunidad.name }))}
                             handleSelectOption={(value) => setSelectedCountry(value)}
-                            label="País"
+                            label="Comunidad Autónoma"
                             required
                             name="autonomous_region"
                         />
 
                         {selectedCountry && (
                             <Select
-                                placeholder="Selecciona tu ciudad"
+                                defaultValue="Selecciona tu ciudad"
                                 options={comunidades.find((comunidad) => comunidad.id === selectedCountry).provincias}
                                 label="Ciudad"
                                 required
