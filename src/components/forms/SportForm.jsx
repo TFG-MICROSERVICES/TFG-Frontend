@@ -83,43 +83,57 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) 
         <>
             {isLoading}
             <Dialog open={openModal} onOpenChange={setOpenModal}>
-                <DialogContent className="bg-white overflow-y-auto">
-                    <DialogHeader>
+                <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95vw] sm:w-full rounded-lg">
+                    <DialogHeader className="mb-4">
                         <DialogTitle>Crear nuevo deporte</DialogTitle>
                         <DialogDescription>Ingresa los datos del nuevo deporte</DialogDescription>
                     </DialogHeader>
-                    <FormProvider initialValue={sport} clase="w-full items-center" onSubmit={handleSubmit} schema={sportSchema}>
-                        <div className="grid grid-cols-1 w-full justify-center items-center gap-4">
-                            <Input label="Nombre" name="name" type="text" placeholder="Introduzca el nombre del deporte" disabled={!login?.admin} />
+                    <div className="overflow-y-auto pr-2">
+                        <FormProvider initialValue={sport} clase="w-full items-center" onSubmit={handleSubmit} schema={sportSchema}>
+                            <div className="grid grid-cols-1 w-full justify-center items-center gap-4">
+                                <Input
+                                    label="Nombre"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Introduzca el nombre del deporte"
+                                    disabled={!login?.admin}
+                                />
 
-                            <Input
-                                label="Cantidad mínima de jugadores"
-                                name="minimum_players"
-                                type="number"
-                                min="0"
-                                placeholder="Introduzca la cantidad minima de jugadores por equipo"
-                                disabled={!login?.admin}
-                            />
+                                <Input
+                                    label="Cantidad mínima de jugadores"
+                                    name="minimum_players"
+                                    type="number"
+                                    min="0"
+                                    placeholder="Introduzca la cantidad minima de jugadores por equipo"
+                                    disabled={!login?.admin}
+                                />
 
-                            <Select label="Estado" name="status" options={status} disabled={!login?.admin} />
+                                <Select label="Estado" name="status" options={status} disabled={!login?.admin} />
 
-                            <Input
-                                label="Descripción"
-                                name="description"
-                                type="text"
-                                placeholder="Introduzca la descripción del deporte"
-                                disabled={!login?.admin}
-                            />
+                                <Input
+                                    label="Descripción"
+                                    name="description"
+                                    type="text"
+                                    placeholder="Introduzca la descripción del deporte"
+                                    disabled={!login?.admin}
+                                />
 
-                            <Input label="Imagen" name="image" type="image" placeholder="Introduzca la foto del deporte" disabled={!login?.admin} />
+                                <Input
+                                    label="Imagen"
+                                    name="image"
+                                    type="image"
+                                    placeholder="Introduzca la foto del deporte"
+                                    disabled={!login?.admin}
+                                />
 
-                            {!login?.admin && (
-                                <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
-                                    <Button type="submit" text={sportId ? 'Actualizar deporte' : 'Registrar deporte'} clase="w-full" />
-                                </div>
-                            )}
-                        </div>
-                    </FormProvider>
+                                {login?.admin && (
+                                    <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
+                                        <Button type="submit" text={sportId ? 'Actualizar deporte' : 'Registrar deporte'} clase="w-full" />
+                                    </div>
+                                )}
+                            </div>
+                        </FormProvider>
+                    </div>
                 </DialogContent>
             </Dialog>
         </>

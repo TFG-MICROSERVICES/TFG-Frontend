@@ -111,8 +111,8 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         <>
             {isLoading}
             <Dialog open={openModal} onOpenChange={handleCloseModal}>
-                <DialogContent className="bg-white overflow-y-auto">
-                    <DialogHeader>
+                <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95vw] sm:w-full rounded-lg">
+                    <DialogHeader className="mb-4">
                         <DialogTitle>
                             {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
                                 ? 'Datos del equipo'
@@ -128,42 +128,51 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                 : 'Ingresa los datos del nuevo equipo'}
                         </DialogDescription>
                     </DialogHeader>
-                    <FormProvider initialValue={team} clase="w-full items-center" onSubmit={handleSubmit} schema={teamSchema}>
-                        <div className="grid grid-cols-1 w-full justify-center items-center gap-4">
-                            <Input label="Nombre" name="name" type="text" placeholder="Introduzca el nombre del equipo" required disabled={!form} />
+                    <div className="overflow-y-auto pr-2">
+                        <FormProvider initialValue={team} clase="w-full items-center" onSubmit={handleSubmit} schema={teamSchema}>
+                            <div className="grid grid-cols-1 w-full justify-center items-center gap-4">
+                                <Input
+                                    label="Nombre"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Introduzca el nombre del equipo"
+                                    required
+                                    disabled={!form}
+                                />
 
-                            <Select label="Deporte" name="sport_id" options={sports} required disabled={!form} />
+                                <Select label="Deporte" name="sport_id" options={sports} required disabled={!form} />
 
-                            <div className="flex w-full justify-between items-center">
-                                <label htmlFor="public" className="text-sm">
-                                    ¿El equipo será público?
-                                </label>
-                                <div className="flex justify-end">
-                                    <Input
-                                        name="public"
-                                        type="checkbox"
-                                        placeholder="¿El equipo será público?"
-                                        clase="w-[15px] h-[15px]"
-                                        disabled={!form}
-                                    />
+                                <div className="flex w-full justify-between items-center">
+                                    <label htmlFor="public" className="text-sm">
+                                        ¿El equipo será público?
+                                    </label>
+                                    <div className="flex justify-end">
+                                        <Input
+                                            name="public"
+                                            type="checkbox"
+                                            placeholder="¿El equipo será público?"
+                                            clase="w-[15px] h-[15px]"
+                                            disabled={!form}
+                                        />
+                                    </div>
                                 </div>
+
+                                {form && (
+                                    <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
+                                        <Button type="submit" text={teamId ? 'Actualizar equipo' : 'Registrar equipo'} clase="w-full" />
+                                    </div>
+                                )}
                             </div>
-
-                            {form && (
-                                <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
-                                    <Button type="submit" text={teamId ? 'Actualizar equipo' : 'Registrar equipo'} clase="w-full" />
-                                </div>
-                            )}
-                        </div>
-                    </FormProvider>
-                    <div className="mt-4">
-                        <h3 className="font-medium text-sm mb-2">Miembros del equipo</h3>
-                        <div className="max-h-[200px] overflow-y-auto rounded-lg border border-gray-200">
-                            {team.user_teams?.length > 0 ? (
-                                team.user_teams.map((userTeam) => <UserTeam key={userTeam.id} userTeam={userTeam} />)
-                            ) : (
-                                <p className="text-center text-gray-500 p-4">No hay miembros en el equipo</p>
-                            )}
+                        </FormProvider>
+                        <div className="mt-4">
+                            <h3 className="font-medium text-sm mb-2">Miembros del equipo</h3>
+                            <div className="max-h-[150px] sm:max-h-[200px] overflow-y-auto rounded-lg border border-gray-200">
+                                {team.user_teams?.length > 0 ? (
+                                    team.user_teams.map((userTeam) => <UserTeam key={userTeam.id} userTeam={userTeam} />)
+                                ) : (
+                                    <p className="text-center text-gray-500 p-4">No hay miembros en el equipo</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </DialogContent>
