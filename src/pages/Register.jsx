@@ -115,7 +115,7 @@ export const Register = () => {
                             name="autonomous_region"
                         />
 
-                        {selectedCountry && (
+                        {selectedCountry && comunidades.find((comunidad) => comunidad.id === selectedCountry).provincias && (
                             <Select
                                 defaultValue="Selecciona tu ciudad"
                                 options={comunidades.find((comunidad) => comunidad.id === selectedCountry).provincias}
