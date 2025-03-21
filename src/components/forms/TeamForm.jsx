@@ -111,7 +111,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         <>
             {isLoading}
             <Dialog open={openModal} onOpenChange={handleCloseModal}>
-                <DialogContent className="bg-white">
+                <DialogContent className="bg-white overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
                             {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
