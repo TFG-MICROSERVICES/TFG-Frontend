@@ -70,7 +70,7 @@ export const Register = () => {
                 onSubmit={handleStep}
                 schema={schemaEmail}
                 initialValue={initialValue}
-                clase="space-y-4 w-1/2 flex flex-col items-center justify-center"
+                clase="space-y-4 w-full md:w-1/2 flex flex-col items-center justify-center"
             >
                 {step === 0 && (
                     <>
