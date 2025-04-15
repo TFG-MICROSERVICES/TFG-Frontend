@@ -22,7 +22,7 @@ const status = [
     },
 ];
 
-export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) => {
+export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch, setSportId }) => {
     const [sport, setSport] = useState({
         name: '',
         minimum_players: '',
@@ -64,6 +64,8 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) 
                 return;
             }
             toast.success(sportId ? 'Deporte actualizado correctamente' : 'Deporte creado correctamente');
+            setSportId(null);
+            setSport(null);
             setOpenModal(false);
             refetch && refetch();
         } catch (error) {
@@ -79,10 +81,16 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) 
         }
     }, [sportId, openModal]);
 
+    const handleClose = async () => {
+        setSportId(null);
+        setSport(null);
+        setOpenModal(false);
+    };
+
     return (
         <>
             {isLoading}
-            <Dialog open={openModal} onOpenChange={setOpenModal}>
+            <Dialog open={openModal} onOpenChange={handleClose}>
                 <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95vw] sm:w-full rounded-lg">
                     <DialogHeader className="mb-4">
                         <DialogTitle>Crear nuevo deporte</DialogTitle>
@@ -128,7 +136,9 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch }) 
 
                                 {login?.admin && (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
-                                        <Button type="submit" text={sportId ? 'Actualizar deporte' : 'Registrar deporte'} clase="w-full" />
+                                        <Button type="submit" clase="w-full justify-center">
+                                            {sportId ? 'Actualizar deporte' : 'Registrar deporte'}
+                                        </Button>
                                     </div>
                                 )}
                             </div>

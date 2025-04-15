@@ -9,6 +9,7 @@ import { LayoutBase } from './components/layouts/LayoutBase';
 import { Users } from './pages/Users';
 import { Teams } from './pages/Teams';
 import { Admin } from './pages/Admin';
+import { Events } from './pages/Events';
 function App() {
     return (
         <>
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/deportes" element={<Sports />} />
                     <Route path="/equipos" element={<Teams />} />
                     <Route path="/usuarios" element={<Users />} />
+                    <Route path="/eventos" element={<Events />} />
                     <Route path="/admin" element={<Admin />} />
                     <Route path="/*" element={<Login />} />
                 </Route>

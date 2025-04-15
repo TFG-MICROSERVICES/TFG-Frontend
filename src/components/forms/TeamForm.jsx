@@ -111,7 +111,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         <>
             {isLoading}
             <Dialog open={openModal} onOpenChange={handleCloseModal}>
-                <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95vw] sm:w-full rounded-lg">
+                <DialogContent className="sm:max-w-lg rounded-lg max-h-[90vh] overflow-y-auto md:max-h-[100vh] bg-white">
                     <DialogHeader className="mb-4">
                         <DialogTitle>
                             {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
@@ -159,7 +159,9 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
 
                                 {form && (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
-                                        <Button type="submit" text={teamId ? 'Actualizar equipo' : 'Registrar equipo'} clase="w-full" />
+                                        <Button type="submit" clase="w-full justify-center">
+                                            {teamId ? 'Actualizar equipo' : 'Registrar equipo'}
+                                        </Button>
                                     </div>
                                 )}
                             </div>

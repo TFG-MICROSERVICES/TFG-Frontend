@@ -9,7 +9,7 @@ export const MenuPrincipal = () => {
         { text: 'Inicio', to: '/home', icon: 'lineicons:home' },
         { text: 'Deportes', to: '/deportes', icon: 'iconoir:soccer-ball' },
         { text: 'Equipos', to: '/equipos', icon: 'ri:team-line' },
-        { text: 'Eventos', to: '/eventos-puntuales', icon: 'ri:calendar-line' },
+        { text: 'Eventos', to: '/eventos', icon: 'ri:calendar-line' },
         ...(login?.admin ? [{ text: 'Gestión', to: '/admin', icon: 'material-symbols:manage-accounts-outline' }] : []),
     ];
 

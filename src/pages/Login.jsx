@@ -106,7 +106,9 @@ export const Login = () => {
 
                     <Input label="Contraseña" className="max-w-lg" name="password" type="password" required placeholder="Introduzca su contraseña" />
 
-                    <Button type="submit" text="Iniciar Sesión" clase="text-primary w-full" />
+                    <Button type="submit" clase="text-primary w-full justify-center">
+                        Iniciar Sesión
+                    </Button>
 
                     <div className="flex items-center my-4 w-full">
                         <div className="flex-grow border-t border-gray-300"></div>

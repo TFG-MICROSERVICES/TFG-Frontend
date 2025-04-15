@@ -49,7 +49,7 @@ export const LayoutBase = () => {
                         </div>
                     </header>
 
-                    <div className="flex pt-24 min-h-[calc(100vh-6rem)] w-full">
+                    <div className="flex pt-24 min-h-screen w-full">
                         {!isMobile && isOpen && (
                             <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white shadow-lg z-30 p-2">
                                 <MenuPrincipal />
@@ -60,8 +60,12 @@ export const LayoutBase = () => {
                                 <MenuPrincipal />
                             </aside>
                         )}
-                        <main className={`flex-1 w-full transition-all duration-300 p-4 bg-slate-100 ${isOpen && !isMobile ? 'ml-56' : 'ml-0'}`}>
-                            <div className="w-full max-w-[2000px] mx-auto">
+                        <main
+                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 min-h-[calc(100vh-6rem)] ${
+                                isOpen && !isMobile ? 'ml-56' : 'ml-0'
+                            }`}
+                        >
+                            <div className="w-full h-full max-w-[2000px] mx-auto">
                                 <Outlet />
                             </div>
                         </main>

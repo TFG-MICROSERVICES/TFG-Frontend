@@ -1,12 +1,7 @@
-export const Button = ({ text, clase = 'w-full', handleOnClick, children }) => {
+export const Button = ({ clase = 'w-full', handleOnClick, children }) => {
     return (
-        <div className={`flex justify-center items-center max-w-5xl ${clase}`}>
-            <button
-                onClick={handleOnClick}
-                className={`border text-primary bg-transparent border-primary hover:text-white hover:bg-primary rounded-lg p-2 w-full group`}
-            >
-                <span className="inline-block transition-transform group-hover:scale-105">{text || children}</span>
-            </button>
-        </div>
+        <button className={`bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center ${clase}`} onClick={handleOnClick}>
+            {children}
+        </button>
     );
 };
