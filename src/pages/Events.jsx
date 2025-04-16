@@ -9,6 +9,7 @@ import { EventForm } from '@/components/forms/EventForm';
 import { Button } from '@/components/ui/Button';
 import { getEvents } from '@/api/request/get/events/getEvents';
 import { toast } from 'react-toastify';
+import { EventsInfoModal } from '@/components/events/EventsInfo';
 
 const eventTypes = [
     {
@@ -36,6 +37,7 @@ export const Events = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [eventId, setEventId] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [openInfoModal, setOpenInfoModal] = useState(false);
 
     //Obtenemos los eventos
     const fetchEvents = async () => {
@@ -94,6 +96,7 @@ export const Events = () => {
     return (
         <>
             <EventForm openModal={openModal} setOpenModal={setOpenModal} eventId={eventId} setEventId={setEventId} />
+            <EventsInfoModal open={openInfoModal} setOpen={setOpenInfoModal} eventId={eventId} />
             <div className="container mx-auto">
                 {/* Cabecera de la página */}
                 <div className="flex justify-between items-center mb-6">
@@ -148,7 +151,7 @@ export const Events = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredEvents.map((event) => (
-                            <CardEvent key={event.event_id} event={event} />
+                            <CardEvent key={event.id} event={event} setEventId={setEventId} setInfoModal={setOpenInfoModal} />
                         ))}
                     </div>
                 )}

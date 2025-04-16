@@ -4,8 +4,10 @@ import { LoginContext } from '../../context/LoginContext';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { formatDate } from '@/utils/formatDate';
 import { formatTime } from '@/utils/formatTime';
+import { Button } from './Button';
+import { toast } from 'react-toastify';
 
-export const CardEvent = ({ event, handleOnEdit, handleOnDelete }) => {
+export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, setEventId }) => {
     const { login } = useContext(LoginContext);
 
     // Obtener icono en función del tipo de evento que sea
@@ -26,6 +28,15 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete }) => {
     const isRegistrationOpen = (event) => {
         const now = new Date();
         return now >= new Date(event.registration_start) && now <= new Date(event.registration_end);
+    };
+
+    const handleEvent = () => {
+        try {
+            setInfoModal(true);
+            setEventId(event.id);
+        } catch (error) {
+            toast.error('Error al abrir el evento');
+        }
     };
 
     return (
@@ -65,16 +76,17 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete }) => {
                 <span className="text-xs text-gray-500">
                     {isRegistrationOpen(event) && event.status === '1' ? 'Inscripción abierta' : 'Inscripción cerrada'}
                 </span>
-                <button
-                    className={`px-4 py-1.5 rounded text-sm font-medium ${
+                <Button
+                    clase={`px-4 py-1.5 rounded text-sm font-medium ${
                         isRegistrationOpen(event) && event.status === '1'
                             ? 'bg-blue-500 hover:bg-blue-600 text-white'
                             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     }`}
                     disabled={!isRegistrationOpen(event) || event.status !== '1'}
+                    handleOnClick={() => handleEvent()}
                 >
                     Ver detalles
-                </button>
+                </Button>
             </CardFooter>
         </Card>
     );

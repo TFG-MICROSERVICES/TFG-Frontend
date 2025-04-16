@@ -19,7 +19,6 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [isLoading, setIsLoading] = useState(false);
 
     const [event, setEvent] = useState({
-        event_id: '',
         sport_id: '',
         name: '',
         description: '',
@@ -51,12 +50,13 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
 
     const handleSubmit = async (formValue) => {
         try {
+            console.log(formValue);
             setIsLoading(true);
             let response;
             if (eventId) {
                 response = await updateEvent(eventId, formValue);
             } else {
-                response = await postCreateEvent(formValue);
+                response = await postCreateEvent({ data: formValue });
             }
             if (response.status !== 201 && response.status !== 200) {
                 toast.error(response.message);

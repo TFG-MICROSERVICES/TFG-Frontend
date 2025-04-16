@@ -106,7 +106,7 @@ export const Sports = () => {
 
                 {/* Barra de búsqueda */}
                 <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-                    <SearchBar setSearch={handleSearch} />
+                    <SearchBar setSearch={handleSearch} text="Buscar deportes..." />
                 </div>
 
                 {/* Lista de deportes */}
