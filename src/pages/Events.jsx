@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/Button';
 import { getEvents } from '@/api/request/get/events/getEvents';
 import { toast } from 'react-toastify';
 import { EventsInfoModal } from '@/components/events/EventsInfo';
+import { deleteEvent } from '@/api/request/delete/events/deleteEvent';
+import { generateError } from '@/utils/generateError';
 
 const eventTypes = [
     {
@@ -53,6 +55,44 @@ export const Events = () => {
         }
     };
 
+    const handleFilterToggle = (filter) => {
+        if (activeFilters.includes(filter)) {
+            setActiveFilters(activeFilters.filter((f) => f !== filter));
+        } else {
+            setActiveFilters([...activeFilters, filter]);
+        }
+    };
+
+    const clearFilters = () => {
+        setActiveFilters([]);
+        setSearchTerm('');
+    };
+
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleEditEvent = (e, eventId) => {
+        e.stopPropagation();
+        setEventId(eventId);
+        setOpenModal(true);
+    };
+
+    const handleDeleteEvent = async (e, eventId) => {
+        try {
+            e.stopPropagation();
+            const response = await deleteEvent(eventId);
+            if (response.status !== 200) {
+                generateError(response.message, response.status);
+            } else {
+                toast.success(response.message);
+                fetchEvents();
+            }
+        } catch (error) {
+            toast.error(error.message, error.status);
+        }
+    };
+
     useEffect(() => {
         fetchEvents();
     }, []);
@@ -76,27 +116,10 @@ export const Events = () => {
         setFilteredEvents(result);
     }, [searchTerm, activeFilters, events]);
 
-    const handleFilterToggle = (filter) => {
-        if (activeFilters.includes(filter)) {
-            setActiveFilters(activeFilters.filter((f) => f !== filter));
-        } else {
-            setActiveFilters([...activeFilters, filter]);
-        }
-    };
-
-    const clearFilters = () => {
-        setActiveFilters([]);
-        setSearchTerm('');
-    };
-
-    const handleOpenModal = () => {
-        setOpenModal(true);
-    };
-
     return (
         <>
-            <EventForm openModal={openModal} setOpenModal={setOpenModal} eventId={eventId} setEventId={setEventId} />
-            <EventsInfoModal open={openInfoModal} setOpen={setOpenInfoModal} eventId={eventId} />
+            <EventForm openModal={openModal} setOpenModal={setOpenModal} eventId={eventId} setEventId={setEventId} refetch={fetchEvents} />
+            <EventsInfoModal open={openInfoModal} setOpen={setOpenInfoModal} eventId={eventId} setEventId={setEventId} />
             <div className="container mx-auto">
                 {/* Cabecera de la página */}
                 <div className="flex justify-between items-center mb-6">
@@ -137,7 +160,7 @@ export const Events = () => {
                     <div className="flex justify-center items-center h-64">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
-                ) : filteredEvents.length === 0 ? (
+                ) : filteredEvents && filteredEvents.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                         <div className="text-gray-500 mb-4">
                             <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
@@ -150,9 +173,17 @@ export const Events = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredEvents.map((event) => (
-                            <CardEvent key={event.id} event={event} setEventId={setEventId} setInfoModal={setOpenInfoModal} />
-                        ))}
+                        {filteredEvents &&
+                            filteredEvents.map((event) => (
+                                <CardEvent
+                                    key={event.id}
+                                    event={event}
+                                    setEventId={setEventId}
+                                    setInfoModal={setOpenInfoModal}
+                                    handleOnEdit={handleEditEvent}
+                                    handleOnDelete={handleDeleteEvent}
+                                />
+                            ))}
                     </div>
                 )}
             </div>

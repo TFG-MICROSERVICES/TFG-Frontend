@@ -12,14 +12,22 @@ import { getEvent } from '@/api/request/get/events/getEvent';
 import { updateEvent } from '@/api/request/put/events/updateEvent';
 import { SportContext } from '@/context/SportContext';
 import { eventStatus, eventTypes } from '@/utils/consts';
+import { typeElimination } from '@/constants/tournament';
+import { BlueLoader } from '../ui/Loader';
+import { generateError } from '@/utils/generateError';
+import { checkExistsNameEvent } from '@/api/request/post/events/checkExistsNameEvent';
+import { formatDateTime } from '@/utils/formatTime';
 
 export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, setEventId }) => {
     const { login } = useContext(LoginContext);
     const { sports } = useContext(SportContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [type, setType] = useState('single');
+    const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
+    const [filteredSports, setFilteredSports] = useState([]);
 
     const [event, setEvent] = useState({
-        sport_id: '',
+        sport_id: 1,
         name: '',
         description: '',
         event_type: 'single',
@@ -39,7 +47,14 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                 toast.error('Error al obtener el evento');
                 return;
             }
-            setEvent(response.event);
+            setEvent({
+                ...response.data,
+                registration_start: formatDateTime(response.data.registration_start),
+                registration_end: formatDateTime(response.data.registration_end),
+                start_time: formatDateTime(response.data.start_time),
+                end_time: formatDateTime(response.data.end_time),
+            });
+            setType(response?.data?.event_type);
         } catch (error) {
             console.log(error);
             toast.error('Error al obtener el evento');
@@ -48,13 +63,34 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         }
     };
 
+    useEffect(() => {
+        if (sports) {
+            const activeSports = sports.filter((sport) => {
+                if (sport.status) {
+                    return sport;
+                }
+            });
+            setFilteredSports(activeSports);
+        }
+    }, [sports]);
+
     const handleSubmit = async (formValue) => {
         try {
-            console.log(formValue);
+            if (!eventId) {
+                try {
+                    const response = await checkExistsNameEvent({ event: formValue });
+                    if (response.status !== 200 || response.data) {
+                        generateError(response.message, response.status);
+                    }
+                } catch (error) {
+                    toast.error(error.message, error.status);
+                    return;
+                }
+            }
             setIsLoading(true);
             let response;
             if (eventId) {
-                response = await updateEvent(eventId, formValue);
+                response = await updateEvent(eventId, { data: formValue });
             } else {
                 response = await postCreateEvent({ data: formValue });
             }
@@ -75,82 +111,148 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         }
     };
 
+    const handleClose = () => {
+        setEventId(null);
+        setEvent(null);
+        setOpenModal(false);
+        setType('single');
+        setTypeOfElimination('single_elimination');
+    };
+
+    const handleTypeEvent = (value) => {
+        setType(value);
+        if (value !== 'tournament') {
+            setTypeOfElimination(null);
+        }
+    };
+
+    const handleTypeElimination = (value) => {
+        setTypeOfElimination(value);
+    };
+
     useEffect(() => {
         if (eventId && openModal) {
             fetchEvent();
         }
     }, [eventId, openModal]);
 
-    const handleClose = () => {
-        setEventId(null);
-        setEvent(null);
-        setOpenModal(false);
-    };
-
     return (
-        <Dialog open={openModal} onOpenChange={handleClose}>
-            <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6">
-                <DialogHeader className="mb-4">
-                    <DialogTitle>{eventId ? 'Editar evento' : 'Crear nuevo evento'}</DialogTitle>
-                    <DialogDescription>{eventId ? 'Modifica los datos del evento' : 'Ingresa los datos del nuevo evento'}</DialogDescription>
-                </DialogHeader>
-                <div className="overflow-y-auto pr-2">
-                    <FormProvider
-                        initialValue={event}
-                        clase="w-full items-center"
-                        onSubmit={handleSubmit}
-                        schema={eventId ? updateEventSchema : eventSchema}
-                    >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input label="Nombre del evento" name="name" type="text" placeholder="Nombre del evento" disabled={!login?.admin} />
-
-                            <Select
-                                label="Deporte"
-                                name="sport_id"
-                                options={sports.map((sport) => ({
-                                    value: sport.id,
-                                    label: sport.name,
-                                }))}
-                                disabled={!login?.admin}
-                            />
-
-                            <Select label="Tipo de evento" name="event_type" options={eventTypes} disabled={!login?.admin} />
-
-                            <Select label="Estado" name="status" options={eventStatus} disabled={!login?.admin} />
-
-                            <div className="md:col-span-2">
-                                <Input label="Ubicación" name="location" type="text" placeholder="Ubicación del evento" disabled={!login?.admin} />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <Input
-                                    label="Descripción"
-                                    name="description"
-                                    type="textarea"
-                                    placeholder="Descripción del evento"
-                                    disabled={!login?.admin}
-                                />
-                            </div>
-
-                            <Input label="Inicio del evento" name="start_time" type="datetime-local" disabled={!login?.admin} />
-
-                            <Input label="Fin del evento" name="end_time" type="datetime-local" disabled={!login?.admin} />
-
-                            <Input label="Inicio de inscripciones" name="registration_start" type="datetime-local" disabled={!login?.admin} />
-
-                            <Input label="Fin de inscripciones" name="registration_end" type="datetime-local" disabled={!login?.admin} />
-
-                            {login?.admin && (
-                                <div className="md:col-span-2 mt-4">
-                                    <Button type="submit" clase="w-full justify-center">
-                                        {eventId ? 'Actualizar evento' : 'Crear evento'}
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
-                    </FormProvider>
+        <>
+            {' '}
+            {isLoading && (
+                <div className="flex justify-center items-center h-64">
+                    <BlueLoader />
                 </div>
-            </DialogContent>
-        </Dialog>
+            )}
+            <Dialog open={openModal && sports} onOpenChange={handleClose}>
+                <DialogContent className="bg-white overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-4 sm:p-6">
+                    <DialogHeader className="mb-4">
+                        <DialogTitle>{eventId ? 'Editar evento' : 'Crear nuevo evento'}</DialogTitle>
+                        <DialogDescription>{eventId ? 'Modifica los datos del evento' : 'Ingresa los datos del nuevo evento'}</DialogDescription>
+                    </DialogHeader>
+                    <div className="overflow-y-auto pr-2">
+                        <FormProvider
+                            initialValue={event}
+                            clase="w-full items-center"
+                            onSubmit={handleSubmit}
+                            schema={eventId ? updateEventSchema : eventSchema}
+                        >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Input label="Nombre del evento" name="name" type="text" placeholder="Nombre del evento" />
+
+                                <Select
+                                    label="Deporte"
+                                    name="sport_id"
+                                    options={filteredSports.map((sport) => ({
+                                        value: parseInt(sport.id),
+                                        label: sport.name,
+                                    }))}
+                                />
+
+                                <Select label="Tipo de evento" name="event_type" options={eventTypes} handleSelectOption={handleTypeEvent} />
+
+                                <Select label="Estado" name="status" options={eventStatus} disabled={!login?.admin} />
+
+                                {type === 'tournament' ? (
+                                    <>
+                                        <div className="md:col-span-2 flex flex-col md:flex-row gap-2">
+                                            <Select
+                                                label="Tipo de eliminatoria"
+                                                name="elimination_type"
+                                                options={typeElimination}
+                                                handleSelectOption={handleTypeElimination}
+                                            />
+                                            <Input
+                                                label="Número de equipos"
+                                                name="number_of_teams"
+                                                type="number"
+                                                min={2}
+                                                placeholder="Número de equipos"
+                                            />
+                                        </div>
+                                        {typeOfElimination === 'group_stage' && (
+                                            <div className="md:col-span-2">
+                                                <Input
+                                                    label="Número de equipos por grupo"
+                                                    name="team_for_group"
+                                                    type="number"
+                                                    min={2}
+                                                    placeholder="Equipos por grupo"
+                                                />
+                                            </div>
+                                        )}
+                                    </>
+                                ) : type === 'league' ? (
+                                    <div className="md:col-span-2 flex flex-col md:flex-row gap-2">
+                                        <Input
+                                            label="Número máximo de equipos"
+                                            name="teams_max"
+                                            type="number"
+                                            min={10}
+                                            placeholder="Número máximo de equipos"
+                                        />
+                                        <Select
+                                            label="Ida y Vuelta"
+                                            name="round_robin"
+                                            options={[
+                                                {
+                                                    label: 'Si',
+                                                    value: true,
+                                                },
+                                                {
+                                                    label: 'No',
+                                                    value: false,
+                                                },
+                                            ]}
+                                        />
+                                    </div>
+                                ) : null}
+
+                                <div className="md:col-span-2 flex flex-col md:flex-row gap-2">
+                                    <Input label="Ubicación" name="location" type="text" placeholder="Ubicación del evento" />
+                                    <Input label="Descripción" name="description" type="textarea" placeholder="Descripción del evento" />
+                                </div>
+
+                                <Input label="Inicio del evento" name="start_time" type="datetime-local" />
+
+                                <Input label="Fin del evento" name="end_time" type="datetime-local" />
+
+                                <Input label="Inicio de inscripciones" name="registration_start" type="datetime-local" />
+
+                                <Input label="Fin de inscripciones" name="registration_end" type="datetime-local" />
+
+                                {login?.admin && (
+                                    <div className="md:col-span-2 mt-4">
+                                        <Button type="submit" clase="w-full justify-center">
+                                            {eventId ? 'Actualizar evento' : 'Crear evento'}
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </FormProvider>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 };

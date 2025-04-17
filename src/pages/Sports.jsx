@@ -11,16 +11,17 @@ import { SportForm } from '../components/forms/SportForm';
 import { deleteSport } from '../api/request/delete/sports/deleteSport';
 import { BlueLoader } from '@/components/ui/Loader';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { SportContext } from '@/context/SportContext';
 
 export const Sports = () => {
     // Estados
-    const [sports, setSports] = useState([]);
     const [filteredSports, setFilteredSports] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [openModal, setOpenModal] = useState(false);
     const [sportId, setSportId] = useState(0);
     const { login } = useContext(LoginContext);
+    const { sports, setSports } = useContext(SportContext);
 
     const fetchSports = async () => {
         try {
