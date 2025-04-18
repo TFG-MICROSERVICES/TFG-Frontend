@@ -37,7 +37,53 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         end_time: '',
         registration_start: '',
         registration_end: '',
+
+        // Campos específicos de torneo
+        elimination_type: '',
+        team_for_group: '',
+        number_of_teams: '',
+
+        // Campos específicos de liga
+        teams_max: '',
+        round_robin: '',
     });
+
+    const formatEventData = (data) => {
+        const baseEvent = {
+            sport_id: data.sport_id || 1,
+            name: data.name || '',
+            description: data.description || '',
+            event_type: data.event_type || 'single',
+            status: data.status || '1',
+            location: data.location || '',
+            start_time: data.start_time ? formatDateTime(data.start_time) : '',
+            end_time: data.end_time ? formatDateTime(data.end_time) : '',
+            registration_start: data.registration_start ? formatDateTime(data.registration_start) : '',
+            registration_end: data.registration_end ? formatDateTime(data.registration_end) : '',
+
+            // Inicializamos con string vacío
+            elimination_type: '',
+            team_for_group: '',
+            number_of_teams: '',
+            teams_max: '',
+            round_robin: '',
+        };
+
+        // Si es un torneo, actualizamos sus campos específicos
+        if (data.tournament) {
+            baseEvent.elimination_type = data.tournament.elimination_type || '';
+            baseEvent.team_for_group = data.tournament.team_for_group?.toString() || '';
+            baseEvent.number_of_teams = data.tournament.number_of_teams?.toString() || '';
+        }
+
+        // Si es una liga, actualizamos sus campos específicos
+        if (data.league) {
+            baseEvent.teams_max = data.league.teams_max?.toString() || '';
+            baseEvent.round_robin = data.league.round_robin?.toString() || '';
+        }
+
+        return baseEvent;
+    };
 
     const fetchEvent = async () => {
         try {
@@ -47,13 +93,9 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                 toast.error('Error al obtener el evento');
                 return;
             }
-            setEvent({
-                ...response.data,
-                registration_start: formatDateTime(response.data.registration_start),
-                registration_end: formatDateTime(response.data.registration_end),
-                start_time: formatDateTime(response.data.start_time),
-                end_time: formatDateTime(response.data.end_time),
-            });
+            // Inside fetchEvent:
+            const formattedEvent = formatEventData(response.data);
+            setEvent(formattedEvent);
             setType(response?.data?.event_type);
         } catch (error) {
             console.log(error);
@@ -90,6 +132,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             setIsLoading(true);
             let response;
             if (eventId) {
+                formValue.event_id = eventId;
                 response = await updateEvent(eventId, { data: formValue });
             } else {
                 response = await postCreateEvent({ data: formValue });
