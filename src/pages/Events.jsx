@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Calendar, Plus, Trophy, Users } from 'lucide-react';
 import { CardEvent } from '@/components/ui/CardEvent';
 import { SearchBar } from '@/components/ui/SearchBar';
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { EventsInfoModal } from '@/components/events/EventsInfo';
 import { deleteEvent } from '@/api/request/delete/events/deleteEvent';
 import { generateError } from '@/utils/generateError';
+import { SportContext } from '@/context/SportContext';
 
 const eventTypes = [
     {
@@ -40,14 +41,16 @@ export const Events = () => {
     const [eventId, setEventId] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [openInfoModal, setOpenInfoModal] = useState(false);
+    const { selectedSport } = useContext(SportContext);
 
     //Obtenemos los eventos
     const fetchEvents = async () => {
         try {
             setIsLoading(true);
-            const response = await getEvents();
-
+            const response = await getEvents(selectedSport.id);
+            console.log(response);
             setEvents(response.data);
+            setFilteredEvents(response.data);
         } catch (error) {
             toast.error('Error al obtener los eventos');
         } finally {
@@ -94,27 +97,25 @@ export const Events = () => {
     };
 
     useEffect(() => {
-        fetchEvents();
-    }, []);
+        if (selectedSport) {
+            fetchEvents();
+        }
+    }, [selectedSport]);
 
     useEffect(() => {
-        let result = events;
-
-        if (searchTerm) {
-            result = result.filter(
-                (event) =>
-                    event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    event.sport_name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
+        let newEvents = [];
         if (activeFilters.length > 0) {
-            result = result.filter((event) => activeFilters.includes(event.event_type));
+            newEvents = events.filter((event) => {
+                if (activeFilters.includes(event.event_type)) {
+                    return event;
+                }
+            });
+        } else {
+            newEvents = events;
         }
 
-        setFilteredEvents(result);
-    }, [searchTerm, activeFilters, events]);
+        setFilteredEvents(newEvents);
+    }, [activeFilters]);
 
     return (
         <>

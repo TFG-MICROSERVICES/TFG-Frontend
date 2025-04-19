@@ -27,12 +27,12 @@ export const Teams = () => {
     const [requests, setRequests] = useState([]);
 
     const { login } = useContext(LoginContext);
-    const { sports } = useContext(SportContext);
+    const { sports, selectedSport } = useContext(SportContext);
 
     const fetchTeams = async () => {
         setIsLoading(true);
         try {
-            const response = await getTeams();
+            const response = await getTeams('', selectedSport.id);
             if (response.status === 200) {
                 setTeams(response.teams || []);
                 setFilteredTeams(response.teams || []);
@@ -64,8 +64,10 @@ export const Teams = () => {
     }, [searchTerm, activeFilters, teams]);
 
     useEffect(() => {
-        fetchTeams();
-    }, []);
+        if (selectedSport) {
+            fetchTeams();
+        }
+    }, [selectedSport]);
 
     const handleFilterToggle = (sportId) => {
         setActiveFilters(activeFilters.includes(sportId) ? activeFilters.filter((f) => f !== sportId) : [...activeFilters, sportId]);

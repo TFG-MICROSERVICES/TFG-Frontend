@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { MenuItem } from '../ui/MenuItem';
 import { LoginContext } from '../../context/LoginContext';
+import { SportsTabs } from './SporsTabs';
 
 export const MenuPrincipal = () => {
     const { login } = useContext(LoginContext);

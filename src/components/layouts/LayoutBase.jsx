@@ -7,6 +7,7 @@ import { useLogout } from '../../hooks/useLogout';
 import { useMobile } from '../../hooks/useMobile';
 import { LoginContext } from '../../context/LoginContext';
 import { BlueLoader } from '../../components/ui/Loader';
+import { SportsTabs } from './SporsTabs';
 
 export const LayoutBase = () => {
     const { isOpen, toggleMenu } = useContext(MenuContext);
@@ -48,6 +49,7 @@ export const LayoutBase = () => {
                             </div>
                         </div>
                     </header>
+                    <SportsTabs className={`${isOpen && !isMobile ? 'ml-36' : 'ml-0'} relative top-24`} />
 
                     <div className="flex pt-24 min-h-screen w-full">
                         {!isMobile && isOpen && (
