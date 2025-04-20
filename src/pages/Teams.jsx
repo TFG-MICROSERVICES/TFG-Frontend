@@ -11,15 +11,14 @@ import { deleteTeam } from '../api/request/delete/teams/deleteTeam';
 import { postJoinTeam } from '../api/request/post/teams/joinTeam';
 import { postRequestTeam } from '../api/request/post/teams/requestTeam';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { FilterBar } from '@/components/ui/FilterBar';
 import { Button } from '@/components/ui/Button';
+import { BlueLoader } from '@/components/ui/Loader';
 
 export const Teams = () => {
     // Estados
     const [teams, setTeams] = useState([]);
     const [filteredTeams, setFilteredTeams] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeFilters, setActiveFilters] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [openModal, setOpenModal] = useState(false);
     const [teamId, setTeamId] = useState(0);
@@ -27,7 +26,7 @@ export const Teams = () => {
     const [requests, setRequests] = useState([]);
 
     const { login } = useContext(LoginContext);
-    const { sports, selectedSport } = useContext(SportContext);
+    const { selectedSport } = useContext(SportContext);
 
     const fetchTeams = async () => {
         setIsLoading(true);
@@ -47,36 +46,21 @@ export const Teams = () => {
     };
 
     useEffect(() => {
-        let result = teams;
-
-        if (searchTerm) {
-            result = result.filter(
-                (team) =>
-                    team.name.toLowerCase().includes(searchTerm.toLowerCase()) || team.sport.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+        if (searchTerm.trim() === '') {
+            setFilteredTeams(teams);
+            return;
         }
 
-        if (activeFilters.length > 0) {
-            result = result.filter((team) => activeFilters.includes(team.sport.id.toString()));
-        }
-
-        setFilteredTeams(result);
-    }, [searchTerm, activeFilters, teams]);
+        const searchTermLower = searchTerm.toLowerCase();
+        const filtered = teams.filter((team) => team.name.toLowerCase().includes(searchTermLower));
+        setFilteredTeams(filtered);
+    }, [searchTerm, teams]);
 
     useEffect(() => {
         if (selectedSport) {
             fetchTeams();
         }
     }, [selectedSport]);
-
-    const handleFilterToggle = (sportId) => {
-        setActiveFilters(activeFilters.includes(sportId) ? activeFilters.filter((f) => f !== sportId) : [...activeFilters, sportId]);
-    };
-
-    const clearFilters = () => {
-        setActiveFilters([]);
-        setSearchTerm('');
-    };
 
     const handleOnEdit = (teamId) => {
         setTeamId(teamId);
@@ -149,6 +133,10 @@ export const Teams = () => {
         setOpenModal(true);
     };
 
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     return (
         <div className="container mx-auto">
             {/* Modales */}
@@ -176,21 +164,8 @@ export const Teams = () => {
             <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
                 <div className="flex flex-col md:flex-row gap-4 items-center">
                     {/* SearchBar Component */}
-                    <div className="w-full md:w-72">
-                        <SearchBar setSearch={setSearchTerm} text="Buscar equipos..." clase="w-full" value={searchTerm} />
-                    </div>
-
-                    {/* FilterBar Component */}
-                    <div className="w-full md:flex-1">
-                        <FilterBar
-                            filters={sports}
-                            activeFilters={activeFilters}
-                            onFilterToggle={handleFilterToggle}
-                            onClearFilters={clearFilters}
-                            label="Deportes:"
-                            showClear={activeFilters.length > 0 || searchTerm !== ''}
-                            className="w-full"
-                        />
+                    <div className="w-full">
+                        <SearchBar setSearch={handleSearch} text="Buscar equipos..." clase="w-full" value={searchTerm} />
                     </div>
                 </div>
             </div>
@@ -207,9 +182,6 @@ export const Teams = () => {
                         <h3 className="text-xl font-semibold mb-2">No se encontraron equipos</h3>
                         <p>No hay equipos que coincidan con tus criterios de búsqueda.</p>
                     </div>
-                    <button onClick={clearFilters} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                        Limpiar filtros
-                    </button>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

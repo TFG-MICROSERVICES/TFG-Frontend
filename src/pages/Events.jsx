@@ -49,7 +49,6 @@ export const Events = () => {
         try {
             setIsLoading(true);
             const response = await getEvents(selectedSport.id);
-            console.log(response);
             setEvents(response.data);
             setFilteredEvents(response.data);
         } catch (error) {
@@ -97,6 +96,10 @@ export const Events = () => {
         }
     };
 
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     useEffect(() => {
         if (selectedSport) {
             fetchEvents();
@@ -104,24 +107,26 @@ export const Events = () => {
     }, [selectedSport]);
 
     useEffect(() => {
-        let newEvents = [];
+        let filteredResults = events;
+
+        // Filtrar por tipo de evento
         if (activeFilters.length > 0) {
-            newEvents = events.filter((event) => {
-                if (activeFilters.includes(event.event_type)) {
-                    return event;
-                }
-            });
-        } else {
-            newEvents = events;
+            filteredResults = filteredResults.filter((event) => activeFilters.includes(event.event_type));
         }
 
-        setFilteredEvents(newEvents);
-    }, [activeFilters]);
+        // Filtrar por término de búsqueda
+        if (searchTerm.trim() !== '') {
+            const searchTermLower = searchTerm.toLowerCase();
+            filteredResults = filteredResults.filter((event) => event.name.toLowerCase().includes(searchTermLower));
+        }
+
+        setFilteredEvents(filteredResults);
+    }, [activeFilters, searchTerm, events]);
 
     return (
         <>
             <EventForm openModal={openModal} setOpenModal={setOpenModal} eventId={eventId} setEventId={setEventId} refetch={fetchEvents} />
-            <EventsInfoModal open={openInfoModal} setOpen={setOpenInfoModal} eventId={eventId} setEventId={setEventId} />
+            <EventsInfoModal open={openInfoModal} setOpen={setOpenInfoModal} eventId={eventId} setEventId={setEventId} refetch={fetchEvents} />
             <div className="container mx-auto">
                 {/* Cabecera de la página */}
                 <div className="flex justify-between items-center mb-6">
@@ -138,7 +143,7 @@ export const Events = () => {
                         <div className="flex flex-col md:flex-row gap-4 items-center">
                             {/* SearchBar Component */}
                             <div className="w-full md:w-72">
-                                <SearchBar setSearch={setSearchTerm} text="Buscar eventos..." clase="w-full" value={searchTerm} />
+                                <SearchBar setSearch={handleSearch} text="Buscar eventos..." clase="w-full" value={searchTerm} />
                             </div>
 
                             {/* FilterBar Component */}

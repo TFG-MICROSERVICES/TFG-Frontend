@@ -51,8 +51,10 @@ export const JoinTeamModal = ({ team, openModal, setOpenModal, handleOnJoin, han
                         />
                     )}
                     <div className="flex gap-2 justify-end">
-                        <Button handleOnClick={() => setOpenModal(false)} text="Cancelar" />
-                        <Button handleOnClick={handleJoinTeam} text={team?.public ? 'Unirme' : 'Enviar solicitud'} disabled={isLoading} />
+                        <Button handleOnClick={() => setOpenModal(false)}>Cancelar</Button>
+                        <Button handleOnClick={handleJoinTeam} disabled={isLoading}>
+                            {team?.public ? 'Unirme' : 'Enviar solicitud'}
+                        </Button>
                     </div>
                 </div>
             </DialogContent>

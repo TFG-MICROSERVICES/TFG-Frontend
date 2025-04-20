@@ -9,13 +9,14 @@ import { SportContext } from '@/context/SportContext';
 import { generateError } from '@/utils/generateError';
 import { createTeamEvent } from '@/api/request/post/events/createTeamEvent';
 import { BlueLoader } from '../ui/Loader';
+import { TeamEvent } from './TeamEvent';
 
 export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(false);
     const [canRegister, setCanRegister] = useState(true);
     const [existsTeam, setExistsTeam] = useState(false);
-    const { team, selectedSport } = useContext(SportContext);
+    const { team, selectedSport, isCaptain } = useContext(SportContext);
 
     const fetchEvent = async () => {
         try {
@@ -72,6 +73,7 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
             } else {
                 toast.success('Inscripción realizada correctamente');
                 setCanRegister(false);
+                fetchEvent();
             }
         } catch (error) {
             toast.error(error.message);
@@ -98,7 +100,7 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
             setCanRegister(true);
         }
 
-        if (event?.teams.find((currentTeam) => currentTeam.team_id === team.team_id)) {
+        if (event?.teams.find((currentTeam) => currentTeam.id === team?.team_id)) {
             setCanRegister(false);
             setExistsTeam(true);
         }
@@ -187,6 +189,13 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                                 {getStatusLabel(event?.status)}
                             </span>
                         </div>
+                        <div className="mt-2 max-h-[200px] overflow-y-auto">
+                            {event?.teams && event?.teams.length > 0 ? (
+                                event.teams.map((team) => <TeamEvent key={team.id} team={team} />)
+                            ) : (
+                                <p className="text-gray-500">No hay equipos inscritos</p>
+                            )}
+                        </div>
                     </div>
 
                     <DialogFooter className="flex justify-end gap-2">
@@ -195,12 +204,18 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                         </Button>
                         <Button
                             clase={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium ${
-                                canRegister ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-100 text-black cursor-not-allowed'
+                                canRegister && isCaptain ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-100 text-black cursor-not-allowed'
                             }`}
-                            disabled={!canRegister}
+                            disabled={!canRegister || !isCaptain}
                             handleOnClick={() => handleJoinEvent()}
                         >
-                            {canRegister && !existsTeam ? 'Inscribirme' : existsTeam ? 'Ya estas inscrito' : 'No puedes inscribirte'}
+                            {canRegister && isCaptain && !existsTeam
+                                ? 'Inscribirme'
+                                : existsTeam
+                                ? 'Ya estas inscrito'
+                                : !isCaptain
+                                ? 'Solo puede inscribir al equipo el capitan'
+                                : 'No puedes inscribirte'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

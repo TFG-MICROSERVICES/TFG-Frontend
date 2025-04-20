@@ -9,6 +9,7 @@ export const SportProvider = ({ children }) => {
     const [sports, setSports] = useState([]);
     const [selectedSport, setSelectedSport] = useState(null);
     const [team, setTeam] = useState(null);
+    const [isCaptain, setIsCaptain] = useState(false);
     const { login } = useContext(LoginContext);
 
     const fetchSports = async () => {
@@ -38,6 +39,7 @@ export const SportProvider = ({ children }) => {
                 return;
             }
             setTeam(response.data.data);
+            setIsCaptain(response.data.data.is_captain);
         } catch (error) {
             console.log(error);
         }
@@ -56,7 +58,7 @@ export const SportProvider = ({ children }) => {
     }, [login]);
 
     return (
-        <SportContext.Provider value={{ isLoading, fetchSports, sports, setSports, selectedSport, setSelectedSport, team }}>
+        <SportContext.Provider value={{ isLoading, fetchSports, sports, setSports, selectedSport, setSelectedSport, team, isCaptain }}>
             {children}
         </SportContext.Provider>
     );

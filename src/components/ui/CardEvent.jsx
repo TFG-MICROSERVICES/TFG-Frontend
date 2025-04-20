@@ -1,14 +1,17 @@
 import { Trash, Edit, MapPin, Calendar, Clock, Trophy, Users, Eye } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../../context/LoginContext';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { formatDate } from '@/utils/formatDate';
 import { formatDateTimeDisplay } from '@/utils/formatTime';
 import { Button } from './Button';
 import { toast } from 'react-toastify';
+import { SportContext } from '@/context/SportContext';
 
 export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, setEventId }) => {
     const { login } = useContext(LoginContext);
+    const { team } = useContext(SportContext);
+    const [canRegister, setCanRegister] = useState(false);
 
     // Obtener icono en función del tipo de evento que sea
     const getEventTypeIcon = (type) => {
@@ -38,6 +41,18 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
             toast.error('Error al abrir el evento');
         }
     };
+
+    useEffect(() => {
+        if (event?.status !== '1' || !team) {
+            setCanRegister(false);
+        } else {
+            setCanRegister(true);
+        }
+
+        if (event?.teams.find((currentTeam) => currentTeam.team_id === team?.team_id)) {
+            setCanRegister(false);
+        }
+    }, [event, team]);
 
     return (
         <Card className="hover:shadow-md transition-shadow duration-300 bg-white">
@@ -128,10 +143,18 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
                     <Clock className="h-4 w-4 text-gray-500" />
                     <span
                         className={`text-xs font-medium ${
-                            isRegistrationOpen(event) && event.status === '1' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'
+                            isRegistrationOpen(event) && event.status === '1' && canRegister
+                                ? 'text-green-600 bg-green-50'
+                                : !canRegister
+                                ? 'text-primary bg-blue-50'
+                                : 'text-red-600 bg-red-50'
                         } px-2 py-1 rounded-full`}
                     >
-                        {isRegistrationOpen(event) && event.status === '1' ? 'Inscripción abierta' : 'Inscripción cerrada'}
+                        {isRegistrationOpen(event) && event.status === '1' && canRegister
+                            ? 'Inscripción abierta'
+                            : !canRegister
+                            ? 'Ya estas inscrito '
+                            : 'Inscripción cerrada'}
                     </span>
                 </div>
 

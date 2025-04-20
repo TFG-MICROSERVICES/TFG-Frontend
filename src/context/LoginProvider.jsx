@@ -15,7 +15,6 @@ export const LoginProvider = ({ children }) => {
     const auth = useCallback(async () => {
         try {
             const response = await checkAuth();
-            console.log(response);
             setLogin(response.user);
         } catch (error) {
             console.log(error);

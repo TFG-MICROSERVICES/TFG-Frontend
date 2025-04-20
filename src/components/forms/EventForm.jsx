@@ -26,8 +26,6 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
     const [filteredSports, setFilteredSports] = useState([]);
 
-    console.log(login);
-
     const [event, setEvent] = useState({
         sport_id: 1,
         name: '',

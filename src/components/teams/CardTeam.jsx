@@ -66,7 +66,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                             )}
 
                             {/* Botón de editar para capitanes */}
-                            {team.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
+                            {team?.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
                                 <button
                                     onClick={() => handleOnEdit()}
                                     className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors duration-200"
@@ -77,15 +77,16 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                             )}
 
                             {/* Botón de eliminar para administradores */}
-                            {login?.admin && (
-                                <button
-                                    onClick={() => handleOnDelete()}
-                                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
-                                    title="Eliminar equipo"
-                                >
-                                    <Trash className="h-4 w-4" />
-                                </button>
-                            )}
+                            {login &&
+                                (login.admin || team?.user_teams?.some((userTeam) => userTeam.user.email === login.email && userTeam.is_captain)) && (
+                                    <button
+                                        onClick={() => handleOnDelete()}
+                                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
+                                        title="Eliminar equipo"
+                                    >
+                                        <Trash className="h-4 w-4" />
+                                    </button>
+                                )}
                         </div>
                     </div>
                 </CardHeader>
