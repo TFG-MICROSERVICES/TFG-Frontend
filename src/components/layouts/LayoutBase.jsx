@@ -49,7 +49,7 @@ export const LayoutBase = () => {
                             </div>
                         </div>
                     </header>
-                    <SportsTabs className={`${isOpen && !isMobile ? 'ml-36' : 'ml-0'} relative top-24`} />
+                    <SportsTabs className={`${isOpen && !isMobile ? 'ml-56' : 'ml-0'} relative top-24`} />
 
                     <div className="flex pt-24 min-h-screen w-full">
                         {!isMobile && isOpen && (

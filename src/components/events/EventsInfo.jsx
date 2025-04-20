@@ -1,15 +1,21 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '../ui/Button';
 import { Calendar, Clock, MapPin, Users, Calendar as CalendarIcon } from 'lucide-react';
-import { formatDateTime, formatDateTimeDisplay } from '@/utils/formatTime';
-import { formatDate } from '@/utils/formatDate';
-import { useEffect, useState } from 'react';
+import { formatDateTimeDisplay } from '@/utils/formatTime';
+import { useContext, useEffect, useState } from 'react';
 import { getEvent } from '@/api/request/get/events/getEvent';
 import { toast } from 'react-toastify';
+import { SportContext } from '@/context/SportContext';
+import { generateError } from '@/utils/generateError';
+import { createTeamEvent } from '@/api/request/post/events/createTeamEvent';
+import { BlueLoader } from '../ui/Loader';
 
 export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [canRegister, setCanRegister] = useState(true);
+    const [existsTeam, setExistsTeam] = useState(false);
+    const { team, selectedSport } = useContext(SportContext);
 
     const fetchEvent = async () => {
         try {
@@ -56,6 +62,24 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
         }
     };
 
+    const handleJoinEvent = async () => {
+        try {
+            setLoading(true);
+            const data = { team_id: team.team.id, event_id: eventId, sport_id: selectedSport.id };
+            const response = await createTeamEvent(data);
+            if (response.status !== 201) {
+                generateError(response.message, response.status);
+            } else {
+                toast.success('Inscripción realizada correctamente');
+                setCanRegister(false);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleClose = () => {
         setEventId(null);
         setOpen(false);
@@ -67,8 +91,26 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
         }
     }, [eventId]);
 
+    useEffect(() => {
+        if (event?.status !== '1' || !team) {
+            setCanRegister(false);
+        } else {
+            setCanRegister(true);
+        }
+
+        if (event?.teams.find((currentTeam) => currentTeam.team_id === team.team_id)) {
+            setCanRegister(false);
+            setExistsTeam(true);
+        }
+    }, [event, team]);
+
     return (
         <>
+            {loading && (
+                <div className="flex justify-center items-center h-64">
+                    <BlueLoader size="lg" />
+                </div>
+            )}
             <Dialog open={open} onOpenChange={handleClose}>
                 <DialogContent className="bg-white max-w-2xl">
                     <DialogHeader>
@@ -151,8 +193,14 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                         <Button clase="items-center" handleOnClick={() => setOpen(false)}>
                             Cerrar
                         </Button>
-                        <Button clase="items-center" handleOnClick={() => setOpen(false)}>
-                            Inscribirme
+                        <Button
+                            clase={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium ${
+                                canRegister ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-100 text-black cursor-not-allowed'
+                            }`}
+                            disabled={!canRegister}
+                            handleOnClick={() => handleJoinEvent()}
+                        >
+                            {canRegister && !existsTeam ? 'Inscribirme' : existsTeam ? 'Ya estas inscrito' : 'No puedes inscribirte'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

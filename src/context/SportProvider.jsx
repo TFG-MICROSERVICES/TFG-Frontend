@@ -2,14 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import { SportContext } from './SportContext';
 import { getSports } from '../api/request/get/sports/getSports';
 import { LoginContext } from './LoginContext';
-import { getTeams } from '@/api/request/get/teams/getTeams';
 import { getTeamsByUser } from '@/api/request/get/teams/getTeamByUserId';
 
 export const SportProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [sports, setSports] = useState([]);
     const [selectedSport, setSelectedSport] = useState(null);
-    const [teams, setTeams] = useState([]);
+    const [team, setTeam] = useState(null);
     const { login } = useContext(LoginContext);
 
     const fetchSports = async () => {
@@ -17,7 +16,6 @@ export const SportProvider = ({ children }) => {
             setIsLoading(true);
             const response = await getSports();
             if (response.status !== 200) {
-                console.log(response);
                 return;
             }
             const sportsData = response.sports?.sports;
@@ -39,7 +37,7 @@ export const SportProvider = ({ children }) => {
             if (response.status !== 200) {
                 return;
             }
-            setTeams(response.teams);
+            setTeam(response.data.data);
         } catch (error) {
             console.log(error);
         }
@@ -58,7 +56,7 @@ export const SportProvider = ({ children }) => {
     }, [login]);
 
     return (
-        <SportContext.Provider value={{ isLoading, fetchSports, sports, setSports, selectedSport, setSelectedSport }}>
+        <SportContext.Provider value={{ isLoading, fetchSports, sports, setSports, selectedSport, setSelectedSport, team }}>
             {children}
         </SportContext.Provider>
     );

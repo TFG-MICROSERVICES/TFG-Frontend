@@ -13,6 +13,7 @@ import { EventsInfoModal } from '@/components/events/EventsInfo';
 import { deleteEvent } from '@/api/request/delete/events/deleteEvent';
 import { generateError } from '@/utils/generateError';
 import { SportContext } from '@/context/SportContext';
+import { BlueLoader } from '@/components/ui/Loader';
 
 const eventTypes = [
     {
@@ -159,7 +160,7 @@ export const Events = () => {
                 {/* Lista de eventos */}
                 {isLoading ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                        <BlueLoader size="lg" />
                     </div>
                 ) : filteredEvents && filteredEvents.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">

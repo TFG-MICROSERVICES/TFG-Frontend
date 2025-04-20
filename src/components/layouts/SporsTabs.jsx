@@ -17,7 +17,7 @@ export function SportsTabs({ className }) {
 
     return (
         <div className={`w-full bg-white py-4 border-b border-blue-100 shadow-sm ${className}`}>
-            <div className="container mx-auto px-4">
+            <div className="container px-4">
                 <div className="flex overflow-x-auto hide-scrollbar gap-1 md:gap-2">
                     {sports.map((sport) => (
                         <button

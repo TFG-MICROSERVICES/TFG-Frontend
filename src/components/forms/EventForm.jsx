@@ -26,6 +26,8 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
     const [filteredSports, setFilteredSports] = useState([]);
 
+    console.log(login);
+
     const [event, setEvent] = useState({
         sport_id: 1,
         name: '',
@@ -72,8 +74,12 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         // Si es un torneo, actualizamos sus campos específicos
         if (data.tournament) {
             baseEvent.elimination_type = data.tournament.elimination_type || '';
-            baseEvent.team_for_group = data.tournament.team_for_group?.toString() || '';
             baseEvent.number_of_teams = data.tournament.number_of_teams?.toString() || '';
+            if (baseEvent.elimination_type === 'group_stage') {
+                baseEvent.team_for_group = data.tournament.team_for_group?.toString() || '';
+            } else {
+                delete baseEvent.team_for_group;
+            }
         }
 
         // Si es una liga, actualizamos sus campos específicos
@@ -135,6 +141,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                 formValue.event_id = eventId;
                 response = await updateEvent(eventId, { data: formValue });
             } else {
+                formValue.user_id = login.id;
                 response = await postCreateEvent({ data: formValue });
             }
             if (response.status !== 201 && response.status !== 200) {
