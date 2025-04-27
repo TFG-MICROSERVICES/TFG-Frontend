@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, matchPath } from 'react-router-dom';
 import { User, Menu } from 'lucide-react';
 import { useContext, useEffect } from 'react';
 import { MenuContext } from '../../context/MenuContext';
@@ -15,6 +15,9 @@ export const LayoutBase = () => {
     const { isMobile } = useMobile();
     const { login, loading } = useContext(LoginContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const isEventPage = matchPath('/evento/:event_id', location.pathname);
+    const isProfilePage = matchPath('/perfil', location.pathname);
 
     useEffect(() => {
         if (!login && !loading) {
@@ -49,7 +52,9 @@ export const LayoutBase = () => {
                             </div>
                         </div>
                     </header>
-                    <SportsTabs className={`${isOpen && !isMobile ? 'ml-56' : 'ml-0'} relative top-24`} />
+                    {!isEventPage && !isProfilePage && (
+                        <SportsTabs className={`${isOpen && !isMobile ? 'ml-56' : 'ml-0'} relative top-24`} />
+                    )}
 
                     <div className="flex pt-24 min-h-screen w-full">
                         {!isMobile && isOpen && (

@@ -10,6 +10,8 @@ import { Users } from './pages/Users';
 import { Teams } from './pages/Teams';
 import { Admin } from './pages/Admin';
 import { Events } from './pages/Events';
+import { Evento } from './pages/Evento';
+import { Perfil } from './pages/Perfil';
 function App() {
     return (
         <>
@@ -24,6 +26,8 @@ function App() {
                     <Route path="/usuarios" element={<Users />} />
                     <Route path="/eventos" element={<Events />} />
                     <Route path="/admin" element={<Admin />} />
+                    <Route path="/evento/:event_id" element={<Evento />} />
+                    <Route path="/perfil" element={<Perfil />} />
                     <Route path="/*" element={<Login />} />
                 </Route>
             </Routes>

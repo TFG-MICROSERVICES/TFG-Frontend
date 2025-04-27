@@ -10,12 +10,14 @@ import { generateError } from '@/utils/generateError';
 import { createTeamEvent } from '@/api/request/post/events/createTeamEvent';
 import { BlueLoader } from '../ui/Loader';
 import { TeamEvent } from './TeamEvent';
+import { useNavigate } from 'react-router-dom';
 
 export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(false);
     const [canRegister, setCanRegister] = useState(true);
     const [existsTeam, setExistsTeam] = useState(false);
+    const navigate = useNavigate();
     const { team, selectedSport, isCaptain } = useContext(SportContext);
 
     const fetchEvent = async () => {
@@ -204,7 +206,7 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                         </Button>
                         <Button
                             clase={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium ${
-                                canRegister && isCaptain ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-100 text-black cursor-not-allowed'
+                                canRegister && isCaptain ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-300 cursor-not-allowed'
                             }`}
                             disabled={!canRegister || !isCaptain}
                             handleOnClick={() => handleJoinEvent()}
@@ -216,6 +218,12 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                                 : !isCaptain
                                 ? 'Solo puede inscribir al equipo el capitan'
                                 : 'No puedes inscribirte'}
+                        </Button>
+                        <Button
+                            clase='max-w-[200px]'
+                            handleOnClick={() => navigate(`/evento/${event.id}`)}
+                        >
+                            Ver Evento
                         </Button>
                     </DialogFooter>
                 </DialogContent>
