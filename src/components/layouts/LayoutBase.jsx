@@ -19,6 +19,15 @@ export const LayoutBase = () => {
     const isEventPage = matchPath('/evento/:event_id', location.pathname);
     const isProfilePage = matchPath('/perfil', location.pathname);
 
+    const handleToProfile = (e) => {
+        try{
+            e.stopPropagation();
+            navigate('/perfil')
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         if (!login && !loading) {
             navigate('/login');
@@ -40,7 +49,7 @@ export const LayoutBase = () => {
                             <div className="flex flex-col gap-2 items-end w-full md:w-1/4">
                                 <div className="flex items-end justify-end w-full gap-2">
                                     <div className="flex flex-col items-center md:items-end md:w-full">
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-2 cursor-pointer" onClick={(e) => handleToProfile(e)}>
                                             <p className="text-sm text-gray-600">{login?.name + ' ' + login?.lastName}</p>
                                             <User size={24} className="text-gray-600 md:items-center" />
                                         </div>

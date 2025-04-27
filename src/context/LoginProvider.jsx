@@ -18,6 +18,7 @@ export const LoginProvider = ({ children }) => {
             setLogin(response.user);
         } catch (error) {
             console.log(error);
+            localStorage.removeItem(CURRENT_USER_STORAGE);
             setLogin(null);
         } finally {
             setLoading(false);

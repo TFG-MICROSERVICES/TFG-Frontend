@@ -47,3 +47,19 @@ export const updateProfileSchema = Joi.object({
       'number.base': 'El deporte principal debe ser un número',
     }),
 });
+
+export const updatePasswordSchema = Joi.object({
+  currentPassword: Joi.string().required().messages({
+    'string.empty': 'La contraseña actual es requerida',
+    'any.required': 'La contraseña actual es requerida',
+  }),
+  newPassword: Joi.string().min(8).required().messages({
+    'string.empty': 'La nueva contraseña es requerida',
+    'string.min': 'La nueva contraseña debe tener al menos 8 caracteres',
+    'any.required': 'La nueva contraseña es requerida',
+  }),
+  confirmPassword: Joi.any().valid(Joi.ref('newPassword')).required().messages({
+    'any.only': 'Las contraseñas no coinciden',
+    'any.required': 'Debes confirmar la nueva contraseña',
+  }),
+});
