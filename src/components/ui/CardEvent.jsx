@@ -54,6 +54,8 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
         }
     }, [event, team]);
 
+    console.log(event);
+
     return (
         <Card className="hover:shadow-md transition-shadow duration-300 bg-white">
             <CardHeader className="p-4 pb-2">
@@ -145,15 +147,15 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
                         className={`text-xs font-medium ${
                             isRegistrationOpen(event) && event.status === '1' && canRegister
                                 ? 'text-green-600 bg-green-50'
-                                : !canRegister
+                                : isRegistrationOpen(event) && !canRegister
                                 ? 'text-primary bg-blue-50'
                                 : 'text-red-600 bg-red-50'
                         } px-2 py-1 rounded-full`}
                     >
                         {isRegistrationOpen(event) && event.status === '1' && canRegister
                             ? 'Inscripción abierta'
-                            : !canRegister
-                            ? 'Ya estas inscrito '
+                            : isRegistrationOpen(event) && !canRegister
+                            ? 'Ya estas inscrito o no tienes equipo '
                             : 'Inscripción cerrada'}
                     </span>
                 </div>

@@ -83,9 +83,10 @@ export const Register = () => {
 
                         <Button
                             type="submit"
-                            text="Siguiente"
                             className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all mt-10"
-                        />
+                        >
+                            Siguiente
+                        </Button>
                     </>
                 )}
             </FormProvider>
@@ -127,9 +128,10 @@ export const Register = () => {
 
                         <Button
                             type="submit"
-                            text="Registrarme"
                             className="w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all mt-10"
-                        />
+                        >
+                            Registrarme
+                        </Button>
                     </div>
                 )}
             </FormProvider>
