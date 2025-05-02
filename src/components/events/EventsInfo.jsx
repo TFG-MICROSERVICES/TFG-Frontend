@@ -89,6 +89,11 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
         setOpen(false);
     };
 
+    const isRegistrationOpen = (event) => {
+        const now = new Date();
+        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end);
+    };
+
     useEffect(() => {
         if (eventId) {
             fetchEvent();
@@ -206,18 +211,20 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                         </Button>
                         <Button
                             clase={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium ${
-                                canRegister && isCaptain ? 'bg-blue-50 hover:bg-blue-100 text-blue-600' : 'bg-gray-300 cursor-not-allowed'
+                                canRegister && isCaptain && isRegistrationOpen(event)
+                                    ? 'bg-blue-50 hover:bg-blue-100 text-blue-600'
+                                    : 'bg-gray-300 cursor-not-allowed'
                             }`}
-                            disabled={!canRegister || !isCaptain}
+                            disabled={!canRegister || !isCaptain || !isRegistrationOpen(event)}
                             handleOnClick={() => handleJoinEvent()}
                         >
-                            {canRegister && isCaptain && !existsTeam
-                                ? 'Inscribirme'
+                            {!isRegistrationOpen(event)
+                                ? 'Inscripción cerrada'
                                 : existsTeam
-                                ? 'Ya estas inscrito'
+                                ? 'Ya estás inscrito'
                                 : !isCaptain
-                                ? 'Solo puede inscribir al equipo el capitan'
-                                : 'No puedes inscribirte'}
+                                ? 'Solo puede inscribir al equipo el capitán'
+                                : 'Inscribirme'}
                         </Button>
                         <Button
                             clase='max-w-[200px]'

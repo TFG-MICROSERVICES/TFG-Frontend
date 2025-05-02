@@ -30,7 +30,7 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
     // Verificar si el registro está abierto
     const isRegistrationOpen = (event) => {
         const now = new Date();
-        return now >= new Date(event.registration_start) && now <= new Date(event.registration_end);
+        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end);
     };
 
     const handleEvent = () => {
@@ -44,17 +44,18 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
 
     useEffect(() => {
         if (event?.status !== '1' || !team) {
+            console.log("opcion 1");
             setCanRegister(false);
         } else {
             setCanRegister(true);
+            console.log("opcion 2");
         }
 
         if (event?.teams.find((currentTeam) => currentTeam.team_id === team?.team_id)) {
+            console.log("opcion 3");
             setCanRegister(false);
         }
     }, [event, team]);
-
-    console.log(event);
 
     return (
         <Card className="hover:shadow-md transition-shadow duration-300 bg-white">
