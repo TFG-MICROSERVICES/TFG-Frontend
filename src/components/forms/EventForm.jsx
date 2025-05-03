@@ -60,6 +60,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             end_time: data.end_time ? formatDateTime(data.end_time) : '',
             registration_start: data.registration_start ? formatDateTime(data.registration_start) : '',
             registration_end: data.registration_end ? formatDateTime(data.registration_end) : '',
+            owner: data.owner,
 
             // Inicializamos con string vacío
             elimination_type: '',
@@ -139,7 +140,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                 formValue.event_id = eventId;
                 response = await updateEvent(eventId, { data: formValue });
             } else {
-                formValue.user_id = login.id;
+                formValue.user_id = login.user_id;
                 response = await postCreateEvent({ data: formValue });
             }
             if (response.status !== 201 && response.status !== 200) {
@@ -289,7 +290,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
 
                                 <Input label="Fin de inscripciones" name="registration_end" type="datetime-local" />
 
-                                {login?.admin && (
+                                {(login?.admin || login?.user_id === event?.owner?.user_id || !eventId) && (
                                     <div className="md:col-span-2 mt-4">
                                         <Button type="submit" clase="w-full justify-center">
                                             {eventId ? 'Actualizar evento' : 'Crear evento'}

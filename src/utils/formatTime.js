@@ -10,8 +10,18 @@ export const formatDateTime = (date) => {
 };
 
 // Para mostrar en formato legible
+export const formatTime = (date) => {
+    return new Date(date).toLocaleString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
+
 export const formatDateTimeDisplay = (date) => {
     return new Date(date).toLocaleString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
         hour: '2-digit',
         minute: '2-digit',
     });

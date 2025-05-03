@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../../context/LoginContext';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { formatDate } from '@/utils/formatDate';
-import { formatDateTimeDisplay } from '@/utils/formatTime';
+import { formatTime } from '@/utils/formatTime';
 import { Button } from './Button';
 import { toast } from 'react-toastify';
 import { SportContext } from '@/context/SportContext';
@@ -89,7 +89,7 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
                         <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">{event.name}</h3>
                     </div>
 
-                    {(login?.admin || login?.id === event?.owner?.user_id) && (
+                    {(login?.admin || login?.user_id === event?.owner?.user_id) && (
                         <div className="flex items-start gap-1.5 shrink-0">
                             <button
                                 onClick={(e) => handleOnEdit(e, event.id)}
@@ -135,7 +135,7 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
                     <div className="flex items-center text-sm text-gray-600">
                         <Clock className="h-4 w-4 mr-2 text-gray-500" />
                         <span>
-                            {formatDateTimeDisplay(event.start_time)} - {formatDateTimeDisplay(event.end_time)}
+                            {formatTime(event.start_time)} - {formatTime(event.end_time)}
                         </span>
                     </div>
                 </div>

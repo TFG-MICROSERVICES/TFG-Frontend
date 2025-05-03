@@ -39,7 +39,7 @@ export const LayoutBase = () => {
             {loading ? (
                 <BlueLoader size="lg" />
             ) : (
-                <div className="flex flex-col min-h-screen w-screen overflow-x-hidden">
+                <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
                     <header className="fixed top-0 left-0 right-0 h-24 flex items-center shadow-lg z-40 bg-white px-2">
                         <div className="w-full flex items-center justify-between px-2">
                             <div className="flex items-center w-full">
@@ -65,7 +65,7 @@ export const LayoutBase = () => {
                         <SportsTabs className={`${isOpen && !isMobile ? 'ml-56' : 'ml-0'} relative top-24`} />
                     )}
 
-                    <div className="flex pt-24 min-h-screen w-full">
+                    <div className="flex pt-24 min-h-screen overflow-hidden w-full">
                         {!isMobile && isOpen && (
                             <aside className="fixed top-24 left-0 w-56 h-[calc(100vh-6rem)] bg-white shadow-lg z-30 p-2">
                                 <MenuPrincipal />
@@ -77,7 +77,7 @@ export const LayoutBase = () => {
                             </aside>
                         )}
                         <main
-                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 min-h-[calc(100vh-6rem)] ${
+                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 ${
                                 isOpen && !isMobile ? 'ml-56' : 'ml-0'
                             }`}
                         >

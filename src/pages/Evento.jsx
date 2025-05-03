@@ -2,6 +2,7 @@ import { getEvent } from "@/api/request/get/events/getEvent";
 import { createResultsLeague } from "@/api/request/post/results/createResultsLeague";
 import { LeagueMatches } from "@/components/events/LeagueMatches";
 import { Ranking } from "@/components/events/Ranking";
+import { TeamsListEvent } from "@/components/events/TeamListEvent";
 import { Button } from "@/components/ui/Button";
 import { BlueLoader } from "@/components/ui/Loader";
 import { TabMenu } from "@/components/ui/TabMenu";
@@ -13,7 +14,8 @@ import { toast } from "react-toastify";
 
 const eventTabs = [
   { name: 'Enfrentamientos' },
-  { name: 'Ranking' }
+  { name: 'Ranking' },
+  { name: 'Equipos'}
 ];
 
 export const Evento = () => {
@@ -44,7 +46,6 @@ export const Evento = () => {
     const handleGenerateMatch = async () => {
         try{
             const response = await createResultsLeague(event.teams, event.id);
-            
             if(response.status !== 201){
                 generateError(response.message, response.status);
             }else{
@@ -52,7 +53,7 @@ export const Evento = () => {
                 await fetchEvent();
             }
         }catch(error){
-            toast.error(error);
+            toast.error(error.message);
         }
     }
 
@@ -78,13 +79,19 @@ export const Evento = () => {
                 currentTab={currentTab}
                 setCurrentTab={setCurrentTab}
             />
-            {results?.length === 0 && (event?.owner?.user_id === login?.id || login.admin) ? (
-                <div className="flex items-center justify-center w-full h-full">
-                    <Button handleOnClick={() => handleGenerateMatch()} clase="w-1/3">
-                        Generar enfrentamientos
-                    </Button>
-                </div>
-            ) : results?.length === 0 ? (
+            <div className="flex justify-between items-center mb-6 px-12">
+                <h2 className="text-2xl font-bold text-gray-800">
+                    Enfrentamientos
+                </h2>
+                {(login?.admin || event?.owner?.user_id === login?.user_id) && <Button
+                    handleOnClick={() => handleGenerateMatch()}
+                    clase="w-auto"
+                    variant={event?.results?.length > 0 ? "secondary" : "primary"}
+                >
+                    {event?.results?.length > 0 ? "Reajustar enfrentamientos" : "Generar enfrentamientos"}
+                </Button>}
+            </div>
+            {results?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center w-full h-full py-12">
                     <svg
                         className="w-12 h-12 text-gray-400 mb-4"
@@ -104,8 +111,9 @@ export const Evento = () => {
                 </div>
             ) : (
                 <>
-                {currentTab === 'Ranking' && <Ranking />}
-                {currentTab === 'Enfrentamientos' && <LeagueMatches teams={event?.teams} matchesData={event?.results} />}
+                    {currentTab === 'Ranking' && <Ranking />}
+                    {currentTab === 'Enfrentamientos' && <LeagueMatches teams={event?.teams} matchesData={event?.results} event={event} refetch={fetchEvent} />}
+                    {currentTab === 'Equipos' && <TeamsListEvent teams={event?.teams} />}
                 </>
             )}
 

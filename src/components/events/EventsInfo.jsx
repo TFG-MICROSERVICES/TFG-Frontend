@@ -196,7 +196,7 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                                 {getStatusLabel(event?.status)}
                             </span>
                         </div>
-                        <div className="mt-2 max-h-[200px] overflow-y-auto">
+                        <div className="flex flex-col gap-2 mt-2 max-h-[200px] overflow-y-auto">
                             {event?.teams && event?.teams.length > 0 ? (
                                 event.teams.map((team) => <TeamEvent key={team.id} team={team} />)
                             ) : (
