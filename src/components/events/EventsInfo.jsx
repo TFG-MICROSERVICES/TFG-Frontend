@@ -226,12 +226,14 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
                                 ? 'Solo puede inscribir al equipo el capitán'
                                 : 'Inscribirme'}
                         </Button>
-                        <Button
-                            clase='max-w-[200px]'
-                            handleOnClick={() => navigate(`/evento/${event.id}`)}
-                        >
-                            Ver Evento
-                        </Button>
+                        {event?.event_type !== 'single' ? (
+                            <Button
+                                clase='max-w-[200px]'
+                                handleOnClick={() => navigate(`/evento/${event.id}`)}
+                            >
+                                Ver Evento
+                            </Button>
+                        ) : null}
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

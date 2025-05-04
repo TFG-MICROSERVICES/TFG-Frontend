@@ -44,15 +44,12 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
 
     useEffect(() => {
         if (event?.status !== '1' || !team) {
-            console.log("opcion 1");
             setCanRegister(false);
         } else {
             setCanRegister(true);
-            console.log("opcion 2");
         }
 
         if (event?.teams.find((currentTeam) => currentTeam.team_id === team?.team_id)) {
-            console.log("opcion 3");
             setCanRegister(false);
         }
     }, [event, team]);

@@ -13,8 +13,6 @@ export const TeamsListEvent = ({ teams }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedTeam, setExpandedTeam] = useState("");
 
-  console.log(searchTerm);
-
   // Filtrar equipos por término de búsqueda
   const filteredTeams = teams.filter((team) => team?.name?.toLowerCase().includes(searchTerm?.toLowerCase()))
 

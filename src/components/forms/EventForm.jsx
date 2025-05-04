@@ -24,6 +24,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [isLoading, setIsLoading] = useState(false);
     const [type, setType] = useState('single');
     const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
+    const [groupStage, setGroupStage] = useState(false);
     const [filteredSports, setFilteredSports] = useState([]);
 
     const [event, setEvent] = useState({
@@ -74,7 +75,8 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         if (data.tournament) {
             baseEvent.elimination_type = data.tournament.elimination_type || '';
             baseEvent.number_of_teams = data.tournament.number_of_teams?.toString() || '';
-            if (baseEvent.elimination_type === 'group_stage') {
+            baseEvent.group_stage = data.tournament.group_stage || false;
+            if (baseEvent.group_stage) {
                 baseEvent.team_for_group = data.tournament.team_for_group?.toString() || '';
             } else {
                 delete baseEvent.team_for_group;
@@ -102,6 +104,9 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             const formattedEvent = formatEventData(response.data);
             setEvent(formattedEvent);
             setType(response?.data?.event_type);
+            if(formattedEvent.event_type === 'tournament'){
+                setGroupStage(formattedEvent?.group_stage);
+            }
         } catch (error) {
             console.log(error);
             toast.error('Error al obtener el evento');
@@ -179,6 +184,10 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         setTypeOfElimination(value);
     };
 
+    const handleGroupStage = () => {
+        setGroupStage((prev) => !prev);
+    }
+
     useEffect(() => {
         if (eventId && openModal) {
             fetchEvent();
@@ -239,8 +248,17 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                                                 placeholder="Número de equipos"
                                             />
                                         </div>
-                                        {typeOfElimination === 'group_stage' && (
-                                            <div className="md:col-span-2">
+                                        <div className="md:col-span-2 flex flex-col md:flex-row gap-2">
+                                            <Select
+                                                label="¿Fase de grupos?"
+                                                name="group_stage"
+                                                options={[
+                                                    { value: false, label: "No" },
+                                                    { value: true, label: "Sí" }
+                                                ]}
+                                                handleSelectOption={handleGroupStage}
+                                            />
+                                            {groupStage && (
                                                 <Input
                                                     label="Número de equipos por grupo"
                                                     name="team_for_group"
@@ -248,8 +266,8 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                                                     min={2}
                                                     placeholder="Equipos por grupo"
                                                 />
-                                            </div>
-                                        )}
+                                            )}
+                                        </div>
                                     </>
                                 ) : type === 'league' ? (
                                     <div className="md:col-span-2 flex flex-col md:flex-row gap-2">

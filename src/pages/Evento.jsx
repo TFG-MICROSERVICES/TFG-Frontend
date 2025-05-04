@@ -69,8 +69,6 @@ export const Evento = () => {
         }
     }, [event]);
 
-    console.log(event);
-
     return (
         <>
             {loading ? <BlueLoader /> : null }
@@ -88,7 +86,7 @@ export const Evento = () => {
                     clase="w-auto"
                     variant={event?.results?.length > 0 ? "secondary" : "primary"}
                 >
-                    {event?.results?.length > 0 ? "Reajustar enfrentamientos" : "Generar enfrentamientos"}
+                    {event?.results?.length > 0 ? "Reajustar enfrentamientos" : !event?.tournmanent?.generate_groups ? "Generar enfrentamientos de grupos" : !event?.tournmanent?.generate_groups ? 'Generar enfretamientos de eliminatoria' : 'Generar enfrentamientos'}
                 </Button>}
             </div>
             {results?.length === 0 ? (

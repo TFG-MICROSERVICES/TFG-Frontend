@@ -7,8 +7,4 @@ export const typeElimination = [
         label: 'Dos partidos',
         value: 'double_elimination',
     },
-    {
-        label: 'Grupos',
-        value: 'group_stage',
-    },
 ];
