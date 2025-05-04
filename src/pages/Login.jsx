@@ -27,7 +27,7 @@ export const Login = () => {
         try {
             setLoading(true);
             const response = await postLogin(credentials);
-            console.log(response);
+            console.log("response login", response);
 
             if (!response || response.status !== 200) {
                 throw new Error('Error al iniciar sesión');

@@ -7,7 +7,15 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Users, Calendar, MapPin, Mail, Phone } from "lucide-react"
 import { SearchBar } from "../ui/SearchBar"
-import { formatDateTime } from "@/utils/formatTime"
+import { formatDateTimeDisplay } from "@/utils/formatTime"
+import { formatDate } from "@/utils/formatDate"
+
+// Función para obtener las iniciales de un nombre
+const getInitials = (name, lastName) => {
+  const firstInitial = name ? name.charAt(0) : ""
+  const lastInitial = lastName ? lastName.charAt(0) : ""
+  return (firstInitial + lastInitial).toUpperCase()
+}
 
 export const TeamsListEvent = ({ teams }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,25 +24,12 @@ export const TeamsListEvent = ({ teams }) => {
   // Filtrar equipos por término de búsqueda
   const filteredTeams = teams.filter((team) => team?.name?.toLowerCase().includes(searchTerm?.toLowerCase()))
 
-  // Función para obtener las iniciales de un nombre
-  const getInitials = (name, lastName) => {
-    const firstInitial = name ? name.charAt(0) : ""
-    const lastInitial = lastName ? lastName.charAt(0) : ""
-    return (firstInitial + lastInitial).toUpperCase()
-  }
-
-  // Función para formatear fecha
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" }
-    return new Date(dateString).toLocaleDateString("es-ES", options)
-  }
-
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-    };
+  const handleSearch = (e) => {
+      setSearchTerm(e.target.value);
+  };
 
   return (
-    <div className="min-h-screen bg-white p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           <div className="w-full rounded-lg bg-primary text-white px-6 py-4 mb-4">
@@ -76,7 +71,7 @@ export const TeamsListEvent = ({ teams }) => {
                           <CardTitle className="text-xl">{team.name}</CardTitle>
                           <div className="flex items-center mt-1 text-sm text-gray-500">
                             <Calendar className="h-4 w-4 mr-1" />
-                            Creado: {formatDateTime(team.createdAt)}
+                            Creado: {formatDateTimeDisplay(team.createdAt)}
                           </div>
                         </div>
                         <div className="flex items-center mt-2 md:mt-0">

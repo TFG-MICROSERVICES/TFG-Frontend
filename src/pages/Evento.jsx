@@ -3,6 +3,7 @@ import { createResultsLeague } from "@/api/request/post/results/createResultsLea
 import { LeagueMatches } from "@/components/events/LeagueMatches";
 import { Ranking } from "@/components/events/Ranking";
 import { TeamsListEvent } from "@/components/events/TeamListEvent";
+import TournamentMatches from "@/components/events/TournamentMatches";
 import { Button } from "@/components/ui/Button";
 import { BlueLoader } from "@/components/ui/Loader";
 import { TabMenu } from "@/components/ui/TabMenu";
@@ -14,7 +15,6 @@ import { toast } from "react-toastify";
 
 const eventTabs = [
   { name: 'Enfrentamientos' },
-  { name: 'Ranking' },
   { name: 'Equipos'}
 ];
 
@@ -86,9 +86,10 @@ export const Evento = () => {
                     clase="w-auto"
                     variant={event?.results?.length > 0 ? "secondary" : "primary"}
                 >
-                    {event?.results?.length > 0 ? "Reajustar enfrentamientos" : !event?.tournmanent?.generate_groups ? "Generar enfrentamientos de grupos" : !event?.tournmanent?.generate_groups ? 'Generar enfretamientos de eliminatoria' : 'Generar enfrentamientos'}
+                    {event?.results?.length > 0 ? "Reajustar enfrentamientos" : event?.event_type === 'tournament' ? 'Generar enfretamientos de eliminatoria' : 'Generar enfrentamientos'}
                 </Button>}
             </div>
+            {currentTab === 'Equipos' && <TeamsListEvent teams={event?.teams} />}
             {results?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center w-full h-full py-12">
                     <svg
@@ -109,12 +110,14 @@ export const Evento = () => {
                 </div>
             ) : (
                 <>
-                    {currentTab === 'Ranking' && <Ranking />}
-                    {currentTab === 'Enfrentamientos' && <LeagueMatches teams={event?.teams} matchesData={event?.results} event={event} refetch={fetchEvent} />}
-                    {currentTab === 'Equipos' && <TeamsListEvent teams={event?.teams} />}
+                    {currentTab === 'Ranking' && event?.event_type === 'league' && <Ranking />}
+                    {(currentTab === 'Enfrentamientos' && event?.event_type === 'league')
+                      ? <LeagueMatches teams={event?.teams} matchesData={event?.results} event={event} refetch={fetchEvent} />
+                      : (currentTab === 'Enfrentamientos') ? <TournamentMatches teams={event?.teams} event={event} results={event?.results} refetch={fetchEvent} />
+                      : null 
+                    }
                 </>
             )}
-
         </>
     );
 }
