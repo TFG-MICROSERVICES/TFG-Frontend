@@ -14,8 +14,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const eventTabs = [
-  { name: 'Enfrentamientos' },
-  { name: 'Equipos'}
+    { name: 'Enfrentamientos' },
+    { name: 'Equipos' }
 ];
 
 export const Evento = () => {
@@ -44,34 +44,34 @@ export const Evento = () => {
     };
 
     const handleGenerateMatch = async () => {
-        try{
+        try {
             const response = await createResultsLeague(event.teams, event.id);
-            if(response.status !== 201){
+            if (response.status !== 201) {
                 generateError(response.message, response.status);
-            }else{
+            } else {
                 toast.success(response.message);
                 await fetchEvent();
             }
-        }catch(error){
+        } catch (error) {
             toast.error(error.message);
         }
     }
 
     useEffect(() => {
-        if(event_id){
+        if (event_id) {
             fetchEvent();
         }
-    },[event_id]);
+    }, [event_id]);
 
-    useEffect(() =>{
-        if(event){
+    useEffect(() => {
+        if (event) {
             setResults(event?.results);
         }
     }, [event]);
 
     return (
         <>
-            {loading ? <BlueLoader /> : null }
+            {loading ? <BlueLoader /> : null}
             <TabMenu
                 tabs={eventTabs}
                 currentTab={currentTab}
@@ -110,11 +110,10 @@ export const Evento = () => {
                 </div>
             ) : (
                 <>
-                    {currentTab === 'Ranking' && event?.event_type === 'league' && <Ranking />}
                     {(currentTab === 'Enfrentamientos' && event?.event_type === 'league')
-                      ? <LeagueMatches teams={event?.teams} matchesData={event?.results} event={event} refetch={fetchEvent} />
-                      : (currentTab === 'Enfrentamientos') ? <TournamentMatches teams={event?.teams} event={event} results={event?.results} refetch={fetchEvent} />
-                      : null 
+                        ? <LeagueMatches teams={event?.teams} matchesData={event?.results} event={event} refetch={fetchEvent} />
+                        : (currentTab === 'Enfrentamientos') ? <TournamentMatches teams={event?.teams} event={event} results={event?.results} refetch={fetchEvent} />
+                            : null
                     }
                 </>
             )}

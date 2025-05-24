@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation, matchPath } from 'react-router-dom';
 import { User, Menu } from 'lucide-react';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MenuContext } from '../../context/MenuContext';
 import { MenuPrincipal } from './MenuPrincipal';
 import { useLogout } from '../../hooks/useLogout';
@@ -8,6 +8,8 @@ import { useMobile } from '../../hooks/useMobile';
 import { LoginContext } from '../../context/LoginContext';
 import { BlueLoader } from '../../components/ui/Loader';
 import { SportsTabs } from './SporsTabs';
+import { getAllEventsByUser } from '@/api/request/get/events/getAllEventsByUser';
+import { getTeamsByUser } from '@/api/request/get/teams/getTeamByUserId';
 
 export const LayoutBase = () => {
     const { isOpen, toggleMenu } = useContext(MenuContext);
@@ -18,15 +20,59 @@ export const LayoutBase = () => {
     const location = useLocation();
     const isEventPage = matchPath('/evento/:event_id', location.pathname);
     const isProfilePage = matchPath('/perfil', location.pathname);
+    const isSports = matchPath('/deportes', location.pathname);
+    const [teams, setTeams] = useState([]);
+    const [loadingTeams, setLoadingTeams] = useState(false);
+    const [events, setEvents] = useState([]);
+    const [loadingEvents, setLoadingEvents] = useState(false);
+
+    const fetchTeams = async () => {
+        try {
+            setLoadingTeams(true);
+            const response = await getTeamsByUser(login.email);
+            if (response.status !== 200) {
+                throw Error(response.message);
+            } else {
+                setTeams(response.data);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoadingTeams(false);
+        }
+    }
+
+    const fetchEvents = async () => {
+        try {
+            setLoadingEvents(true);
+            const response = await getAllEventsByUser(login.user_id);
+            if (response.status !== 200) {
+                throw Error(response.message);
+            } else {
+                setEvents(response.data);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoadingEvents(false);
+        }
+    }
 
     const handleToProfile = (e) => {
-        try{
+        try {
             e.stopPropagation();
             navigate('/perfil')
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        if (login) {
+            fetchTeams();
+            fetchEvents();
+        }
+    }, [login]);
 
     useEffect(() => {
         if (!login && !loading) {
@@ -61,7 +107,7 @@ export const LayoutBase = () => {
                             </div>
                         </div>
                     </header>
-                    {!isEventPage && !isProfilePage && (
+                    {!isEventPage && !isProfilePage && !isSports && (
                         <SportsTabs className={`${isOpen && !isMobile ? 'ml-56' : 'ml-0'} relative top-24`} />
                     )}
 
@@ -77,12 +123,16 @@ export const LayoutBase = () => {
                             </aside>
                         )}
                         <main
-                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 ${
-                                isOpen && !isMobile ? 'ml-56' : 'ml-0'
-                            }`}
+                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 ${isOpen && !isMobile ? 'ml-56' : 'ml-0'
+                                }`}
                         >
                             <div className="w-full h-full max-w-[2000px] mx-auto">
-                                <Outlet />
+                                <Outlet context={{
+                                    teams,
+                                    loadingTeams,
+                                    events,
+                                    loadingEvents
+                                }} />
                             </div>
                         </main>
                     </div>

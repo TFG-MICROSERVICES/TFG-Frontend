@@ -39,7 +39,7 @@ export const SportProvider = ({ children }) => {
                 return;
             }
             setTeam(response.data.data);
-            setIsCaptain(response.data.data.is_captain);
+            setIsCaptain(response.data.data?.is_captain);
         } catch (error) {
             console.log(error);
         }

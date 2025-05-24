@@ -12,6 +12,12 @@ export const Select = ({ placeholder, options, disabled, required, label, name, 
         }
     }, [options]);
 
+    useEffect(() => {
+        if (defaultValue && options.length > 0) {
+            updateFormValue({ [name]: defaultValue });
+        }
+    }, [defaultValue, options]);
+
     const updateRequest = ({ target }) => {
         if (!isTouchedInput) setIsTouchedInput(true);
         updateFormValue({ [name]: target.value });

@@ -62,13 +62,15 @@ export const Teams = () => {
         }
     }, [selectedSport]);
 
-    const handleOnEdit = (teamId) => {
+    const handleOnEdit = (e, teamId) => {
+        e.stopPropagation();
         setTeamId(teamId);
         setOpenModal(true);
     };
 
-    const handleOnDelete = async (teamId) => {
+    const handleOnDelete = async (e, teamId) => {
         try {
+            e.stopPropagation();
             const response = await deleteTeam(teamId);
             if (response.status === 200) {
                 toast.success('Equipo eliminado correctamente');
@@ -84,6 +86,7 @@ export const Teams = () => {
 
     const handleOnJoin = async (teamId, sportId) => {
         try {
+            console.log()
             const response = await postJoinTeam({
                 team_id: teamId,
                 user_email: login.email,
@@ -189,7 +192,7 @@ export const Teams = () => {
                         <CardTeam
                             key={team.id}
                             team={team}
-                            handleOnEdit={() => handleOnEdit(team.id)}
+                            handleOnEdit={(e) => handleOnEdit(e, team.id)}
                             handleOnDelete={() => handleOnDelete(team.id)}
                             handleOnJoin={() => handleOnJoin(team.id, team.sport.id)}
                             handleOnRequest={handleOnRequest}

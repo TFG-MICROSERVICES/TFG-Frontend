@@ -8,6 +8,11 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
     const { login } = useContext(LoginContext);
     const [joinModal, setJoinModal] = useState(false);
 
+    const handleJoin = (e) => {
+        e.stopPropagation();
+        setJoinModal(true)
+    }
+
     return (
         <>
             <JoinTeamModal
@@ -17,7 +22,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                 handleOnJoin={handleOnJoin}
                 handleOnRequest={handleOnRequest}
             />
-            <Card className="hover:shadow-md transition-shadow duration-300 bg-white">
+            <Card className="hover:shadow-md cursor-pointer transition-shadow duration-300 bg-white" onClick={handleOnEdit}>
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -47,7 +52,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                                 <>
                                     {team.public ? (
                                         <button
-                                            onClick={() => setJoinModal(true)}
+                                            onClick={(e) => handleJoin(e)}
                                             className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors duration-200"
                                             title="Unirse al equipo"
                                         >
@@ -55,7 +60,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => setJoinModal(true)}
+                                            onClick={(e) => handleJoin(e)}
                                             className="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full transition-colors duration-200"
                                             title="Equipo privado"
                                         >
@@ -66,7 +71,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                             )}
 
                             {/* Botón de editar para capitanes */}
-                            {team?.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
+                            {/* {team?.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
                                 <button
                                     onClick={() => handleOnEdit()}
                                     className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors duration-200"
@@ -74,13 +79,13 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                                 >
                                     <Edit className="h-4 w-4" />
                                 </button>
-                            )}
+                            )} */}
 
                             {/* Botón de eliminar para administradores */}
                             {login &&
                                 (login.admin || team?.user_teams?.some((userTeam) => userTeam.user.email === login.email && userTeam.is_captain)) && (
                                     <button
-                                        onClick={() => handleOnDelete()}
+                                        onClick={(e) => handleOnDelete(e)}
                                         className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
                                         title="Eliminar equipo"
                                     >
@@ -103,7 +108,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                     </span>
                     <span className="text-sm text-gray-600">{team.user_teams?.length || 0} miembros</span>
                 </CardFooter>
-            </Card>
+            </Card >
         </>
     );
 };

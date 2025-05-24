@@ -12,6 +12,7 @@ import { updateTeam } from '../../api/request/put/teams/updateTeam';
 import { getSports } from '../../api/request/get/sports/getSports';
 import { UserTeam } from '../teams/UserTeam';
 import { LoginContext } from '../../context/LoginContext';
+import { SportContext } from '@/context/SportContext';
 
 const initialTeam = {
     name: '',
@@ -25,6 +26,8 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState(null);
     const { login } = useContext(LoginContext);
+    const { selectedSport } = useContext(SportContext);
+    const [isCaptain, setIsCaptain] = useState(false);
 
     const fetchTeam = useCallback(async () => {
         try {
@@ -76,6 +79,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
             }
             toast.success(teamId ? 'Equipo actualizado correctamente' : 'Equipo creado correctamente');
             setTeam(initialTeam);
+            setIsCaptain()
             closeModal();
             refetch && refetch();
         } catch (error) {
@@ -107,6 +111,17 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         }
     }, [team, login, teamId]);
 
+    useEffect(() => {
+        if (!isLoading && teamId && login) {
+            const captain = team?.user_teams?.find((user) => {
+                if (user.is_captain) {
+                    return user;
+                }
+            });
+            setIsCaptain(captain?.user_email === login.email);
+        }
+    }, [isLoading, login]);
+
     return (
         <>
             {isLoading}
@@ -117,15 +132,15 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                             {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
                                 ? 'Datos del equipo'
                                 : teamId
-                                ? 'Editar equipo'
-                                : 'Crear nuevo equipo'}
+                                    ? 'Editar equipo'
+                                    : 'Crear nuevo equipo'}
                         </DialogTitle>
                         <DialogDescription>
                             {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
                                 ? 'Aqui puedes ver los datos del equipo y sus miembros'
                                 : teamId
-                                ? 'Edita los datos del equipo'
-                                : 'Ingresa los datos del nuevo equipo'}
+                                    ? 'Edita los datos del equipo'
+                                    : 'Ingresa los datos del nuevo equipo'}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="overflow-y-auto pr-2">
@@ -137,10 +152,17 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                     type="text"
                                     placeholder="Introduzca el nombre del equipo"
                                     required
-                                    disabled={!form}
+                                    disabled={!form || !isCaptain && teamId}
                                 />
 
-                                <Select label="Deporte" name="sport_id" options={sports} required disabled={!form} />
+                                <Select
+                                    label="Deporte"
+                                    name="sport_id"
+                                    options={sports}
+                                    defaultValue={selectedSport?.id}
+                                    required
+                                    disabled={!form || !isCaptain && teamId}
+                                />
 
                                 <div className="flex w-full justify-between items-center">
                                     <label htmlFor="public" className="text-sm">
@@ -152,18 +174,18 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                             type="checkbox"
                                             placeholder="¿El equipo será público?"
                                             clase="w-[15px] h-[15px]"
-                                            disabled={!form}
+                                            disabled={!form || !isCaptain && teamId}
                                         />
                                     </div>
                                 </div>
 
-                                {form && (
+                                {form && !!isCaptain ? (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
                                         <Button type="submit" clase="w-full justify-center">
                                             {teamId ? 'Actualizar equipo' : 'Registrar equipo'}
                                         </Button>
                                     </div>
-                                )}
+                                ) : null}
                             </div>
                         </FormProvider>
                         <div className="mt-4">

@@ -266,13 +266,13 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                                     <Input label="Descripción" name="description" type="textarea" placeholder="Descripción del evento" />
                                 </div>
 
-                                <Input label="Inicio del evento" name="start_time" type="datetime-local" />
-
-                                <Input label="Fin del evento" name="end_time" type="datetime-local" />
-
                                 <Input label="Inicio de inscripciones" name="registration_start" type="datetime-local" />
 
                                 <Input label="Fin de inscripciones" name="registration_end" type="datetime-local" />
+
+                                <Input label="Inicio del evento" name="start_time" type="datetime-local" />
+
+                                <Input label="Fin del evento" name="end_time" type="datetime-local" />
 
                                 {(login?.admin || login?.user_id === event?.owner?.user_id || !eventId) && (
                                     <div className="md:col-span-2 mt-4">
