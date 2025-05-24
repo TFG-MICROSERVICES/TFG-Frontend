@@ -25,7 +25,6 @@ export const Home = () => {
     const { selectedSport } = useContext(SportContext);
     const navigate = useNavigate();
 
-    // Función para obtener las iniciales de un nombre
     const getInitials = (name) => {
         return name
             .split(" ")
@@ -35,7 +34,6 @@ export const Home = () => {
             .substring(0, 2)
     }
 
-    // Función para determinar el estado del evento
     const getEventStatus = (event) => {
         const now = new Date()
         const startTime = new Date(event.start_time)
@@ -54,7 +52,6 @@ export const Home = () => {
         return "Próximo"
     }
 
-    // Función para obtener el badge de estado del evento
     const getEventStatusBadge = (status) => {
         switch (status) {
             case "Finalizado":
@@ -70,7 +67,6 @@ export const Home = () => {
         }
     }
 
-    // Filtrar datos por deporte
     const filteredTeams = useMemo(() => {
         console.log(teams)
         if (selectedSport === "all") return teams
@@ -82,7 +78,6 @@ export const Home = () => {
         return events.filter((event) => event.sport_id === selectedSport.id)
     }, [selectedSport])
 
-    // Separar eventos en pasados y próximos
     const { pastEvents, upcomingEvents } = useMemo(() => {
         const now = new Date()
         const past = filteredEvents.filter((event) => new Date(event.end_time) < now)
