@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { Register } from './pages/Register';
@@ -20,6 +20,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/google/register" element={<Registration />} />
                 <Route path="/" element={<LayoutBase />}>
+                    <Route index element={<Navigate to="/home" replace />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/deportes" element={<Sports />} />
                     <Route path="/equipos" element={<Teams />} />
@@ -31,18 +32,6 @@ function App() {
                     <Route path="/*" element={<Login />} />
                 </Route>
             </Routes>
-            <ToastContainer
-                position="top-center"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
             <ToastContainer
                 position="top-center"
                 autoClose={3000}

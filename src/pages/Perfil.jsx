@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LoginContext } from "@/context/LoginContext";
 import { MapPin, Clock, Shield, User } from "lucide-react"
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatDateTimeDisplay } from "@/utils/formatTime";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { formatDateToInput } from "@/utils/formatDate";
 import { generateError } from "@/utils/generateError";
 import { updatePassword } from "@/api/request/patch/users/updatePassword";
+import { comunidades } from "@/constants/locations";
 
 export const Perfil = () => {
     const { login } = useContext(LoginContext);
@@ -29,14 +30,17 @@ export const Perfil = () => {
         birthdate: formatDateToInput(login?.birthdate) || "",
         city: login?.city || "",
         autonomous_region: login?.autonomous_region || "",
-        main_sport_id: login?.main_sport_id || null,
+        main_sport_id: login?.main_sport_id || null
     });
     const [password, setPassword] = useState({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
     });
+    const [selectedCountry, setSelectedCountry] = useState('');
     const { sports } = useContext(SportContext);
+
+    console.log(login);
 
     //Petición para actualizar el perfil del usuario
     const handleSave = async (formValue) => {
@@ -74,6 +78,12 @@ export const Perfil = () => {
     const handleEdit = () => {
         setIsEditing((prev) => !prev)
     }
+
+    useEffect(() => {
+        if(login){
+            setSelectedCountry(login?.autonomous_region);
+        }
+    }, [login])
 
     return(
         <>
@@ -163,16 +173,20 @@ export const Perfil = () => {
                                             type="date"
                                             disabled={!isEditing}
                                         />
-                                        <Input
-                                            name="city"
+                                        <Select
+                                            defaultValue="Selecciona tu ciudad"
+                                            options={comunidades.find((comunidad) => comunidad.id === selectedCountry)?.provincias}
                                             label="Ciudad"
-                                            placeholder="Ciudad"
-                                            disabled={!isEditing}
+                                            required
+                                            name="city"
                                         />
-                                        <Input
-                                            name="autonomous_region"
+                                        <Select
+                                            defaultValue="Selecciona tu comunidad autónoma"
+                                            options={comunidades?.map((comunidad) => ({ value: comunidad.id, label: comunidad.name }))}
+                                            handleSelectOption={(value) => setSelectedCountry(value)}
                                             label="Comunidad Autónoma"
-                                            placeholder="Comunidad Autónoma"
+                                            required
+                                            name="autonomous_region"
                                             disabled={!isEditing}
                                         />
                                         <Select

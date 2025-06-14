@@ -45,10 +45,14 @@ export const Home = () => {
         if (events) {
             const filtered = selectedSport === "all"
                 ? events
-                : events.filter((event) => event.sport_id === selectedSport?.id);
+                : events.filter((event) => parseInt(event.sport_id) === selectedSport?.id);
             setFilteredEvents(filtered);
         }
     }, [events, selectedSport]);
+
+    console.log(events);
+    console.log(selectedSport);
+    console.log(teams);
 
     // Efecto para separar eventos pasados y futuros
     useEffect(() => {
@@ -230,7 +234,10 @@ export const Home = () => {
                                                             <p>Visibilidad: {userTeam.team.public ? "Público" : "Privado"}</p>
                                                         </div>
 
-                                                        <Button className="w-full" variant="outline" handleOnClick={() => navigate('/equipos')}>
+                                                        <Button 
+                                                            className="w-full" 
+                                                            handleOnClick={() => navigate(`/equipos?team_id=${userTeam.team.id}`)}
+                                                        >
                                                             Ver Equipo
                                                         </Button>
                                                     </div>
@@ -251,7 +258,7 @@ export const Home = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {upcomingEvents.length > 0 ? (
                                         upcomingEvents.map((event) => (
-                                            <Card key={event.id} className="hover:shadow-lg transition-shadow">
+                                            <Card key={event.id} className="hover:shadow-lg bg-white transition-shadow">
                                                 <CardHeader>
                                                     <div className="flex items-center justify-between">
                                                         <CardTitle className="text-xl">{event.name}</CardTitle>
@@ -283,7 +290,12 @@ export const Home = () => {
                                                             </p>
                                                         </div>
 
-                                                        <Button className="w-full">Ver Evento</Button>
+                                                        <Button 
+                                                            className="w-full"
+                                                            handleOnClick={() => navigate(`/eventos?event_id=${event.id}`)}
+                                                        >
+                                                            Ver Evento
+                                                        </Button>
                                                     </div>
                                                 </CardContent>
                                             </Card>
@@ -302,7 +314,7 @@ export const Home = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {pastEvents.length > 0 ? (
                                         pastEvents.map((event) => (
-                                            <Card key={event.id} className="hover:shadow-lg transition-shadow opacity-75">
+                                            <Card key={event.id} className="hover:shadow-lg bg-white transition-shadow opacity-75">
                                                 <CardHeader>
                                                     <div className="flex items-center justify-between">
                                                         <CardTitle className="text-xl">{event.name}</CardTitle>

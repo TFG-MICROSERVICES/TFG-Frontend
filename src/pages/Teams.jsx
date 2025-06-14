@@ -13,6 +13,7 @@ import { postRequestTeam } from '../api/request/post/teams/requestTeam';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { Button } from '@/components/ui/Button';
 import { BlueLoader } from '@/components/ui/Loader';
+import { useSearchParams } from 'react-router-dom';
 
 export const Teams = () => {
     // Estados
@@ -24,6 +25,8 @@ export const Teams = () => {
     const [teamId, setTeamId] = useState(0);
     const [showModalRequests, setShowModalRequests] = useState(false);
     const [requests, setRequests] = useState([]);
+    const [searchParams] = useSearchParams();
+    
 
     const { login } = useContext(LoginContext);
     const { selectedSport } = useContext(SportContext);
@@ -61,6 +64,14 @@ export const Teams = () => {
             fetchTeams();
         }
     }, [selectedSport]);
+
+    useEffect(() => {
+        const teamIdFromUrl = searchParams.get('team_id');
+        if (teamIdFromUrl) {
+            setTeamId(parseInt(teamIdFromUrl));
+            setOpenModal(true);
+        }
+    }, [searchParams]);
 
     const handleOnEdit = (e, teamId) => {
         e.stopPropagation();
@@ -175,9 +186,7 @@ export const Teams = () => {
 
             {/* Lista de equipos */}
             {isLoading ? (
-                <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                </div>
+                <BlueLoader />
             ) : filteredTeams.length === 0 ? (
                 <div className="bg-white rounded-lg shadow-sm p-8 text-center">
                     <div className="text-gray-500 mb-4">

@@ -14,6 +14,7 @@ import { deleteEvent } from '@/api/request/delete/events/deleteEvent';
 import { generateError } from '@/utils/generateError';
 import { SportContext } from '@/context/SportContext';
 import { BlueLoader } from '@/components/ui/Loader';
+import { useSearchParams } from 'react-router-dom';
 
 const eventTypes = [
     {
@@ -43,6 +44,7 @@ export const Events = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openInfoModal, setOpenInfoModal] = useState(false);
     const { selectedSport } = useContext(SportContext);
+    const [searchParams] = useSearchParams();
 
     //Obtenemos los eventos
     const fetchEvents = async () => {
@@ -122,6 +124,14 @@ export const Events = () => {
 
         setFilteredEvents(filteredResults);
     }, [activeFilters, searchTerm, events]);
+
+    useEffect(() => {
+        const eventIdFromUrl = searchParams.get('event_id');
+        if (eventIdFromUrl) {
+            setEventId(parseInt(eventIdFromUrl));
+            setOpenInfoModal(true);
+        }
+    }, [searchParams]);
 
     return (
         <>
