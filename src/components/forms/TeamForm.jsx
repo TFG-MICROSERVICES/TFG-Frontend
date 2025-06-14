@@ -112,15 +112,11 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
     }, [team, login, teamId]);
 
     useEffect(() => {
-        if (!isLoading && teamId && login) {
-            const captain = team?.user_teams?.find((user) => {
-                if (user.is_captain) {
-                    return user;
-                }
-            });
-            setIsCaptain(captain?.user_email === login.email);
+        if (team && login) {
+            const captain = team?.user_teams?.find((userTeam) => userTeam.is_captain);
+            setIsCaptain(captain?.user?.email === login.email);
         }
-    }, [isLoading, login]);
+    }, [team, login]);
 
     return (
         <>
@@ -179,7 +175,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                     </div>
                                 </div>
 
-                                {form && !!isCaptain ? (
+                                {form && isCaptain || login?.admin ? (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
                                         <Button type="submit" clase="w-full justify-center">
                                             {teamId ? 'Actualizar equipo' : 'Registrar equipo'}

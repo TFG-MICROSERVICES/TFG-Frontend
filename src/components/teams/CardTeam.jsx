@@ -13,6 +13,8 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
         setJoinModal(true)
     }
 
+    console.log(team);
+
     return (
         <>
             <JoinTeamModal
@@ -34,7 +36,10 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                             {team.request_teams?.length > 0 &&
                                 team.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
                                     <button
-                                        onClick={() => showRequests(team)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            showRequests(team)}
+                                        }
                                         className="p-1.5 text-primary hover:bg-primary/10 rounded-full transition-colors duration-200 relative"
                                         title="Solicitudes pendientes"
                                     >
@@ -70,18 +75,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                                 </>
                             )}
 
-                            {/* Botón de editar para capitanes */}
-                            {/* {team?.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
-                                <button
-                                    onClick={() => handleOnEdit()}
-                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition-colors duration-200"
-                                    title="Editar equipo"
-                                >
-                                    <Edit className="h-4 w-4" />
-                                </button>
-                            )} */}
-
-                            {/* Botón de eliminar para administradores */}
+                            {/* Botón de eliminar para administradores o capitanes*/}
                             {login &&
                                 (login.admin || team?.user_teams?.some((userTeam) => userTeam.user.email === login.email && userTeam.is_captain)) && (
                                     <button

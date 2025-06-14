@@ -113,6 +113,10 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
         }
     }, [event, team]);
 
+    console.log(canRegister);
+
+    console.log(team);
+
     return (
         <>
             {loading && (

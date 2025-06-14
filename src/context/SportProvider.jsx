@@ -38,8 +38,8 @@ export const SportProvider = ({ children }) => {
             if (response.status !== 200) {
                 return;
             }
-            setTeam(response.data.data);
-            setIsCaptain(response.data.data?.is_captain);
+            setTeam(response.data[0]);
+            setIsCaptain(response.data[0].is_captain);
         } catch (error) {
             console.log(error);
         }

@@ -43,7 +43,7 @@ export const eventSchema = Joi.object({
         'any.required': 'La fecha de fin es requerida',
     }),
 
-    registration_start: Joi.date().required().min('now').less(Joi.ref('start_time')).messages({
+    registration_start: Joi.date().required().min('now').messages({
         'date.base': 'La fecha de inicio de registro debe ser una fecha válida',
         'date.less': 'La fecha de inicio de registro debe ser anterior a la fecha de inicio del evento',
         'date.min': 'La fecha de inicio de registro debe ser superior a la fecha de hoy',
@@ -94,19 +94,19 @@ export const updateEventSchema = Joi.object({
         'date.min': 'La fecha de inicio debe ser superior a la fecha de hoy',
     }),
 
-    end_time: Joi.date().allow(null).min('now').greater(Joi.ref('start_time')).messages({
+    end_time: Joi.date().allow(null).min('now').messages({
         'date.base': 'La fecha de fin debe ser una fecha válida',
         'date.greater': 'La fecha de fin debe ser posterior a la fecha de inicio',
         'date.min': 'La fecha de fin debe ser superior a la fecha de hoy',
     }),
 
-    registration_start: Joi.date().allow(null).min('now').less(Joi.ref('start_time')).messages({
+    registration_start: Joi.date().allow(null).min('now').messages({
         'date.base': 'La fecha de inicio de registro debe ser una fecha válida',
         'date.less': 'La fecha de inicio de registro debe ser anterior a la fecha de inicio del evento',
         'date.min': 'La fecha de inicio debe ser superior a la fecha de hoy',
     }),
 
-    registration_end: Joi.date().allow(null).min('now').greater(Joi.ref('registration_start')).less(Joi.ref('start_time')).messages({
+    registration_end: Joi.date().allow(null).min('now').messages({
         'date.base': 'La fecha de fin de registro debe ser una fecha válida',
         'date.greater': 'La fecha de fin de registro debe ser posterior a la fecha de inicio de registro',
         'date.less': 'La fecha de fin de registro debe ser anterior a la fecha de inicio del evento',

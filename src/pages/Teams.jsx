@@ -193,7 +193,7 @@ export const Teams = () => {
                             key={team.id}
                             team={team}
                             handleOnEdit={(e) => handleOnEdit(e, team.id)}
-                            handleOnDelete={() => handleOnDelete(team.id)}
+                            handleOnDelete={(e) => handleOnDelete(e,team.id)}
                             handleOnJoin={() => handleOnJoin(team.id, team.sport.id)}
                             handleOnRequest={handleOnRequest}
                             showRequests={handleRequestModal}

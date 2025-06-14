@@ -123,7 +123,7 @@ export const LayoutBase = () => {
                             </aside>
                         )}
                         <main
-                            className={`flex-1 w-full transition-all duration-300 p-4 pb-24 md:pb-4 bg-slate-100 ${isOpen && !isMobile ? 'ml-56' : 'ml-0'
+                            className={`flex-1 w-full transition-all duration-300 pb-24 md:pb-4 bg-slate-100 ${isOpen && !isMobile ? 'ml-56' : 'ml-0'
                                 }`}
                         >
                             <div className="w-full h-full max-w-[2000px] mx-auto">

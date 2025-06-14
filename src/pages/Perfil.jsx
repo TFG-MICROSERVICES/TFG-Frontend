@@ -77,7 +77,7 @@ export const Perfil = () => {
 
     return(
         <>
-            <div className="min-h-screen bg-white shadow-lg p-4 md:p-8">
+            <div className="min-h-screen bg-white shadow-lg md:p-8">
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-8 flex flex-col md:flex-row items-center md:items-start gap-6">
 

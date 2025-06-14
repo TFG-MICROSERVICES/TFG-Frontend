@@ -97,12 +97,12 @@ export const Sports = () => {
                 {/* Cabecera */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">Deportes</h2>
-                    {login?.admin && (
+                    {login?.admin ? (
                         <Button clase="w-44" handleOnClick={handleOpenModal}>
                             <Plus className="h-5 w-5 mr-2" />
                             Añadir deporte
                         </Button>
-                    )}
+                    ) : null}
                 </div>
 
                 {/* Barra de búsqueda */}

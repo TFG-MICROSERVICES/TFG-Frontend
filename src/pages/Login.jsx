@@ -145,10 +145,6 @@ export const Login = () => {
 
                 <hr />
 
-                <Link className="mt-4" to="/">
-                    Olvide mi contraseña
-                </Link>
-
                 <p className="text-gray-400 text-center">
                     ¿No tienes cuenta?
                     <Link className="mt-4 ml-2 text-primary hover:text-blue-700" to="/register">
