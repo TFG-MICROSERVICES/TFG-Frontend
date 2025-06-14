@@ -17,6 +17,8 @@ import { BlueLoader } from '../ui/Loader';
 import { generateError } from '@/utils/generateError';
 import { checkExistsNameEvent } from '@/api/request/post/events/checkExistsNameEvent';
 import { formatDateTime } from '@/utils/formatTime';
+import { tournamentSchema, updateTournamentSchema } from '@/api/schemas/schemaTournament';
+import { leagueSchema, updateLeagueSchema } from '@/api/schemas/schemaLeague';
 
 export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, setEventId }) => {
     const { login } = useContext(LoginContext);
@@ -39,7 +41,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
         registration_end: '',
 
         // Campos específicos de torneo
-        elimination_type: '',
+        elimination_type: 'single_elimination',
         number_of_teams: '',
 
         // Campos específicos de liga
@@ -199,7 +201,19 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                             initialValue={event}
                             clase="w-full items-center"
                             onSubmit={handleSubmit}
-                            schema={eventId ? updateEventSchema : eventSchema}
+                            schema={
+                                eventId 
+                                    ? (type === 'tournament' 
+                                        ? updateTournamentSchema 
+                                        : type === 'league' 
+                                            ? updateLeagueSchema 
+                                            : eventSchema)
+                                    : (type === 'tournament' 
+                                        ? tournamentSchema 
+                                        : type === 'league' 
+                                            ? leagueSchema 
+                                            : eventSchema)
+                            }
                         >
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <Input label="Nombre del evento" name="name" type="text" placeholder="Nombre del evento" />
