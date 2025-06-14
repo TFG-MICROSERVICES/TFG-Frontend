@@ -34,7 +34,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                         <div className="flex gap-2">
                             {/* Botón de solicitudes pendientes */}
                             {team.request_teams?.length > 0 &&
-                                team.user_teams?.some((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && (
+                                team.user_teams?.some((userTeam) => userTeam?.user?.email === login?.email && userTeam.is_captain) && (
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -53,7 +53,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
                                 )}
 
                             {/* Botones de unirse/privado */}
-                            {!team?.user_teams?.some((userTeam) => userTeam.user.email === login?.email) && (
+                            {!team?.user_teams?.some((userTeam) => userTeam?.user?.email === login?.email) && (
                                 <>
                                     {team.public ? (
                                         <button
@@ -77,7 +77,7 @@ export const CardTeam = ({ team, handleOnEdit, handleOnDelete, handleOnJoin, han
 
                             {/* Botón de eliminar para administradores o capitanes*/}
                             {login &&
-                                (login.admin || team?.user_teams?.some((userTeam) => userTeam.user.email === login.email && userTeam.is_captain)) && (
+                                (login.admin || team?.user_teams?.some((userTeam) => userTeam?.user?.email === login?.email && userTeam.is_captain)) && (
                                     <button
                                         onClick={(e) => handleOnDelete(e)}
                                         className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"

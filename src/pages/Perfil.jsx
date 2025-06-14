@@ -87,7 +87,7 @@ export const Perfil = () => {
 
     return(
         <>
-            <div className="min-h-screen bg-white shadow-lg md:p-8">
+            <div className="min-h-screenshadow-lg md:p-8">
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-8 flex flex-col md:flex-row items-center md:items-start gap-6">
 
@@ -104,21 +104,21 @@ export const Perfil = () => {
                         <TabsList className="grid grid-cols-3 mb-8 gap-1">
                             <TabsTrigger
                                 value="personal"
-                                className="p-2 shadow-lg data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
+                                className="p-2 shadow-lg bg-white data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
                             >
                                 <User className="h-4 w-4 mr-2" />
                                 Información personal
                             </TabsTrigger>
                             <TabsTrigger
                                 value="password"
-                                className="p-2 shadow-lg data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
+                                className="p-2 shadow-lg bg-white data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
                             >
                                 <User className="h-4 w-4 mr-2" />
                                 Gestionar contraseña
                             </TabsTrigger>
                             <TabsTrigger
                                 value="account"
-                                className="p-2 shadow-lg data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
+                                className="p-2 shadow-lg bg-white data-[state=active]:bg-primary data-[state=active]:text-white rounded-md"
                             >
                                 <Shield className="h-4 w-4 mr-2" />
                                 Cuenta

@@ -126,14 +126,6 @@ export const SportForm = ({ sportId = null, openModal, setOpenModal, refetch, se
                                     disabled={!login?.admin}
                                 />
 
-                                <Input
-                                    label="Imagen"
-                                    name="image"
-                                    type="image"
-                                    placeholder="Introduzca la foto del deporte"
-                                    disabled={!login?.admin}
-                                />
-
                                 {login?.admin ? (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
                                         <Button type="submit" clase="w-full justify-center">

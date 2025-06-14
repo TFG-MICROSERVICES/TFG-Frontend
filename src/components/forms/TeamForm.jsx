@@ -118,6 +118,15 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         }
     }, [team, login]);
 
+    useEffect(() => {
+        if(selectedSport){
+            setTeam((prev) => ({
+                ...prev,
+                sport_id: selectedSport.id
+            }));
+        }
+    }, [selectedSport]);
+
     return (
         <>
             {isLoading}
@@ -155,7 +164,6 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                     label="Deporte"
                                     name="sport_id"
                                     options={sports}
-                                    defaultValue={selectedSport?.id}
                                     required
                                     disabled={!form || !isCaptain && teamId}
                                 />

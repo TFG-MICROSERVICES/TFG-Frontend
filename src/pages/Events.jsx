@@ -175,7 +175,7 @@ export const Events = () => {
                 {/* Lista de eventos */}
                 {isLoading ? (
                     <div className="flex justify-center items-center h-64">
-                        <BlueLoader size="lg" />
+                        <BlueLoader />
                     </div>
                 ) : filteredEvents && filteredEvents.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
