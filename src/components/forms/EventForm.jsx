@@ -27,6 +27,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [type, setType] = useState('single');
     const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
     const [filteredSports, setFilteredSports] = useState([]);
+    const { selectedSport } = useContext(SportContext);
 
     const [event, setEvent] = useState({
         sport_id: 1,
@@ -46,7 +47,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
 
         // Campos específicos de liga
         teams_max: '',
-        round_robin: '',
+        round_robin: true,
     });
 
     const formatEventData = (data) => {
@@ -64,11 +65,11 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             owner: data.owner,
 
             // Inicializamos con string vacío
-            elimination_type: '',
+            elimination_type: 'single_elimination',
             team_for_group: '',
             number_of_teams: '',
             teams_max: '',
-            round_robin: '',
+            round_robin: true,
         };
 
         // Si es un torneo, actualizamos sus campos específicos
@@ -181,6 +182,15 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             fetchEvent();
         }
     }, [eventId, openModal]);
+
+    useEffect(() => {
+        if(selectedSport){
+            setEvent((prev) => ({
+                ...prev,
+                sport_id: selectedSport.id
+            }));
+        }
+    }, [selectedSport])
 
     return (
         <>

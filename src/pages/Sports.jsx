@@ -49,9 +49,10 @@ export const Sports = () => {
             return;
         }
 
-        const searchTermLower = searchTerm.toLowerCase();
+        const searchTermLower = searchTerm?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const filtered = sports.filter(
-            (sport) => sport.name.toLowerCase().includes(searchTermLower) || sport.description.toLowerCase().includes(searchTermLower)
+            (sport) => 
+                sport?.name?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchTermLower)
         );
         setFilteredSports(filtered);
     }, [searchTerm, sports]);

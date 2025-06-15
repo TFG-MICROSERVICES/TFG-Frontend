@@ -9,6 +9,7 @@ export const eventSchema = Joi.object({
     name: Joi.string().max(255).required().messages({
         'string.empty': 'El nombre del evento es requerido',
         'string.max': 'El nombre del evento no puede exceder los 255 caracteres',
+        'any.required': 'el nombre del evento es requerido'
     }),
 
     description: Joi.string().allow(null, '').messages({
@@ -18,6 +19,7 @@ export const eventSchema = Joi.object({
     event_type: Joi.string().required().valid('single', 'tournament', 'league').messages({
         'string.empty': 'El tipo de evento es requerido',
         'any.only': 'El tipo de evento debe ser: single, tournament o league',
+        'any.required': 'El tipo de evento es requerido'
     }),
 
     status: Joi.string().valid('0', '1', '2').default('1').messages({
@@ -44,18 +46,26 @@ export const eventSchema = Joi.object({
     }),
 
     registration_start: Joi.date().required().min('now').messages({
-        'date.base': 'La fecha de inicio de registro debe ser una fecha válida',
-        'date.less': 'La fecha de inicio de registro debe ser anterior a la fecha de inicio del evento',
-        'date.min': 'La fecha de inicio de registro debe ser superior a la fecha de hoy',
-        'any.required': 'La fecha de inicio de registro es requerida',
+        'date.base': 'La fecha de inicio de inscripción debe ser una fecha válida',
+        'date.less': 'La fecha de inicio de inscripción debe ser anterior a la fecha de inicio del evento',
+        'date.min': 'La fecha de inicio de inscripción debe ser superior a la fecha de hoy',
+        'any.required': 'La fecha de inicio de inscripción es requerida',
     }),
 
-    registration_end: Joi.date().required().min('now').greater(Joi.ref('registration_start')).less(Joi.ref('start_time')).messages({
-        'date.base': 'La fecha de fin de registro debe ser una fecha válida',
-        'date.greater': 'La fecha de fin de registro debe ser posterior a la fecha de inicio de registro',
-        'date.less': 'La fecha de fin de registro debe ser anterior a la fecha de inicio del evento',
-        'date.min': 'La fecha de fin de registro debe ser superior a la fecha de hoy',
-        'any.required': 'La fecha de fin de registro es requerida',
+    registration_end: Joi.date().required().min('now').when('start_time', {
+        is: Joi.exist(),
+        then: Joi.date().less(Joi.ref('start_time')),
+        otherwise: Joi.date()
+    }).when('registration_start', {
+        is: Joi.exist(),
+        then: Joi.date().greater(Joi.ref('registration_start')),
+        otherwise: Joi.date()
+    }).messages({
+        'date.base': 'La fecha de fin de inscripción debe ser una fecha válida',
+        'date.greater': 'La fecha de fin de inscripción debe ser posterior a la fecha de inicio de inscripción',
+        'date.less': 'La fecha de fin de inscripción debe ser anterior a la fecha de inicio del evento',
+        'date.min': 'La fecha de fin de inscripción debe ser superior a la fecha de hoy',
+        'any.required': 'La fecha de fin de inscripción es requerida',
     }),
 });
 
@@ -101,15 +111,23 @@ export const updateEventSchema = Joi.object({
     }),
 
     registration_start: Joi.date().allow(null).min('now').messages({
-        'date.base': 'La fecha de inicio de registro debe ser una fecha válida',
-        'date.less': 'La fecha de inicio de registro debe ser anterior a la fecha de inicio del evento',
+        'date.base': 'La fecha de inicio de inscripción debe ser una fecha válida',
+        'date.less': 'La fecha de inicio de inscripción debe ser anterior a la fecha de inicio del evento',
         'date.min': 'La fecha de inicio debe ser superior a la fecha de hoy',
     }),
 
-    registration_end: Joi.date().allow(null).min('now').messages({
-        'date.base': 'La fecha de fin de registro debe ser una fecha válida',
-        'date.greater': 'La fecha de fin de registro debe ser posterior a la fecha de inicio de registro',
-        'date.less': 'La fecha de fin de registro debe ser anterior a la fecha de inicio del evento',
-        'date.min': 'La fecha de fin de registro debe ser superior a la fecha de hoy',
+    registration_end: Joi.date().allow(null).min('now').when('start_time', {
+        is: Joi.exist(),
+        then: Joi.date().less(Joi.ref('start_time')),
+        otherwise: Joi.date()
+    }).when('registration_start', {
+        is: Joi.exist(),
+        then: Joi.date().greater(Joi.ref('registration_start')),
+        otherwise: Joi.date()
+    }).messages({
+        'date.base': 'La fecha de fin de inscripción debe ser una fecha válida',
+        'date.greater': 'La fecha de fin de inscripción debe ser posterior a la fecha de inicio de inscripción',
+        'date.less': 'La fecha de fin de inscripción debe ser anterior a la fecha de inicio del evento',
+        'date.min': 'La fecha de fin de inscripción debe ser superior a la fecha de hoy',
     }),
 });

@@ -9,6 +9,7 @@ export const tournamentSchema = Joi.object({
     name: Joi.string().max(255).required().messages({
         'string.empty': 'El nombre del evento es requerido',
         'string.max': 'El nombre del evento no puede exceder los 255 caracteres',
+        'any.required': 'el nombre del evento es requerido'
     }),
 
     description: Joi.string().allow(null, '').messages({
@@ -18,16 +19,19 @@ export const tournamentSchema = Joi.object({
     event_type: Joi.string().required().valid('single', 'tournament', 'league').messages({
         'string.empty': 'El tipo de evento es requerido',
         'any.only': 'El tipo de evento debe ser: single, tournament o league',
+        'any.required': 'El tipo de evento es requerido'
     }),
 
     status: Joi.string().valid('0', '1', '2').default('1').messages({
         'string.empty': 'El estado no puede estar vacío',
         'any.only': 'El estado debe ser: 0, 1 o 2',
+        'any.required': 'El estado es requerido'
     }),
 
     location: Joi.string().max(255).required().messages({
         'string.empty': 'La ubicación es requerida',
         'string.max': 'La ubicación no puede exceder los 255 caracteres',
+        'any.required': 'La localización es requerida'
     }),
 
     start_time: Joi.date().required().min('now').messages({
