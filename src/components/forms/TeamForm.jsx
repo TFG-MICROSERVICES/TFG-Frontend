@@ -105,7 +105,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
         if (team && login) {
             const canEdit =
                 login?.admin ||
-                (team.user_teams?.find((userTeam) => userTeam.user.email === login?.email && userTeam.is_captain) && teamId) ||
+                (team?.user_teams?.find((userTeam) => userTeam?.user?.email === login?.email && userTeam?.is_captain) && teamId) ||
                 !teamId;
             setForm(canEdit);
         }
@@ -113,8 +113,8 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
 
     useEffect(() => {
         if (team && login) {
-            const captain = team?.user_teams?.find((userTeam) => userTeam.is_captain);
-            setIsCaptain(captain?.user?.email === login.email);
+            const captain = team?.user_teams?.find((userTeam) => userTeam?.is_captain);
+            setIsCaptain(captain?.user?.email === login?.email);
         }
     }, [team, login]);
 
@@ -134,14 +134,14 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                 <DialogContent className="sm:max-w-lg rounded-lg max-h-[90vh] overflow-y-auto md:max-h-[100vh] bg-white">
                     <DialogHeader className="mb-4">
                         <DialogTitle>
-                            {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
+                            {!login?.admin && !team?.user_teams?.some((ut) => ut?.user?.email === login?.email && ut?.is_captain)
                                 ? 'Datos del equipo'
                                 : teamId
                                     ? 'Editar equipo'
                                     : 'Crear nuevo equipo'}
                         </DialogTitle>
                         <DialogDescription>
-                            {!login?.admin && !team.user_teams?.some((ut) => ut.user.email === login?.email && ut.is_captain)
+                            {!login?.admin && !team?.user_teams?.some((ut) => ut?.user?.email === login?.email && ut?.is_captain)
                                 ? 'Aqui puedes ver los datos del equipo y sus miembros'
                                 : teamId
                                     ? 'Edita los datos del equipo'
@@ -183,7 +183,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                                     </div>
                                 </div>
 
-                                {form && isCaptain || login?.admin ? (
+                                {form && isCaptain || login?.admin || !teamId ? (
                                     <div className="w-full flex flex-col items-center justify-center mt-5 h-full">
                                         <Button type="submit" clase="w-full justify-center">
                                             {teamId ? 'Actualizar equipo' : 'Registrar equipo'}
@@ -195,8 +195,8 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
                         <div className="mt-4">
                             <h3 className="font-medium text-sm mb-2">Miembros del equipo</h3>
                             <div className="max-h-[150px] sm:max-h-[200px] overflow-y-auto rounded-lg border border-gray-200">
-                                {team.user_teams?.length > 0 ? (
-                                    team.user_teams.map((userTeam) => <UserTeam key={userTeam.id} userTeam={userTeam} />)
+                                {team?.user_teams?.length > 0 ? (
+                                    team?.user_teams?.map((userTeam) => <UserTeam key={userTeam?.id} userTeam={userTeam} />)
                                 ) : (
                                     <p className="text-center text-gray-500 p-4">No hay miembros en el equipo</p>
                                 )}
