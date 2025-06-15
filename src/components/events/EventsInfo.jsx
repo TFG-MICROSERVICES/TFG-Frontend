@@ -53,13 +53,11 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
     const getStatusLabel = (status) => {
         switch (status) {
             case '0':
-                return 'Borrador';
+                return 'Cerrado';
             case '1':
                 return 'Activo';
             case '2':
                 return 'Cancelado';
-            case '3':
-                return 'Finalizado';
             default:
                 return 'Desconocido';
         }
@@ -91,8 +89,10 @@ export const EventsInfoModal = ({ open, setOpen, eventId, setEventId }) => {
 
     const isRegistrationOpen = (event) => {
         const now = new Date();
-        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end);
+        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end) && !event?.status==='0';
     };
+
+    console.log("valor",isRegistrationOpen(event));
 
     useEffect(() => {
         if (eventId) {

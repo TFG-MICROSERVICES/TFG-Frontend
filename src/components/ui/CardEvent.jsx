@@ -10,7 +10,8 @@ import { SportContext } from '@/context/SportContext';
 
 export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, setEventId }) => {
     const { login } = useContext(LoginContext);
-    const { team } = useContext(SportContext);
+    const { team, isCaptain } = useContext(SportContext);
+    const [existsTeam, setExistsTeam] = useState(false);
     const [canRegister, setCanRegister] = useState(false);
 
     // Obtener icono en función del tipo de evento que sea
@@ -27,10 +28,9 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
         }
     };
 
-    // Verificar si el registro está abierto
     const isRegistrationOpen = (event) => {
         const now = new Date();
-        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end);
+        return now >= new Date(event?.registration_start) && now <= new Date(event?.registration_end) && !event?.status==='0';
     };
 
     const handleEvent = () => {
@@ -49,8 +49,9 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
             setCanRegister(true);
         }
 
-        if (event?.teams.find((currentTeam) => currentTeam.team_id === team?.team_id)) {
+        if (event?.teams.find((currentTeam) => currentTeam.id === team?.team_id)) {
             setCanRegister(false);
+            setExistsTeam(true);
         }
     }, [event, team]);
 
@@ -150,11 +151,13 @@ export const CardEvent = ({ event, handleOnEdit, handleOnDelete, setInfoModal, s
                                 : 'text-red-600 bg-red-50'
                         } px-2 py-1 rounded-full`}
                     >
-                        {isRegistrationOpen(event) && event.status === '1' && canRegister
-                            ? 'Inscripción abierta'
-                            : isRegistrationOpen(event) && !canRegister
-                            ? 'Ya estas inscrito o no tienes equipo '
-                            : 'Inscripción cerrada'}
+                            {!isRegistrationOpen(event)
+                                ? 'Inscripción cerrada'
+                                : existsTeam
+                                ? 'Ya estás inscrito'
+                                : !isCaptain
+                                ? 'Solo puede inscribir al equipo el capitán'
+                                : 'Inscribirme'}
                     </span>
                 </div>
 

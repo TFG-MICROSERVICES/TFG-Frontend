@@ -275,7 +275,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
 
                                 <Select label="Tipo de evento" name="event_type" options={eventTypes} handleSelectOption={handleTypeEvent} />
 
-                                <Select label="Estado" name="status" options={eventStatus} disabled={!login?.admin} />
+                                <Select label="Estado" name="status" options={eventStatus} />
 
                                 {type === 'tournament' ? (
                                     <>
