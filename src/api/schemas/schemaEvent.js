@@ -30,6 +30,7 @@ export const eventSchema = Joi.object({
     location: Joi.string().max(255).required().messages({
         'string.empty': 'La ubicación es requerida',
         'string.max': 'La ubicación no puede exceder los 255 caracteres',
+        'any.required': 'La ubicación es requerida'
     }),
 
     start_time: Joi.date().required().messages({

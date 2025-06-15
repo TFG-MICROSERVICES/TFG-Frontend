@@ -20,6 +20,10 @@ import { formatDateTime } from '@/utils/formatTime';
 import { tournamentSchema, updateTournamentSchema } from '@/api/schemas/schemaTournament';
 import { leagueSchema, updateLeagueSchema } from '@/api/schemas/schemaLeague';
 
+const initialValue = {
+    
+}
+
 export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, setEventId }) => {
     const { login } = useContext(LoginContext);
     const { sports } = useContext(SportContext);
@@ -138,7 +142,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
                 formValue.event_id = eventId;
                 response = await updateEvent(eventId, { data: formValue });
             } else {
-                formValue.user_id = login?.id ?? login?.user_id;
+                formValue.user_id = login?.user_id;
                 response = await postCreateEvent({ data: formValue });
             }
             if (response.status !== 201 && response.status !== 200) {
@@ -147,7 +151,22 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             }
             toast.success(eventId ? 'Evento actualizado correctamente' : 'Evento creado correctamente');
             setEventId(null);
-            setEvent(null);
+            setEvent({
+                sport_id: selectedSport?.id || 1,
+                name: '',
+                description: '',
+                event_type: 'single',
+                status: '1',
+                location: '',
+                start_time: '',
+                end_time: '',
+                registration_start: '',
+                registration_end: '',
+                elimination_type: 'single_elimination',
+                number_of_teams: '',
+                teams_max: '',
+                round_robin: true,
+            });
             setOpenModal(false);
             refetch && refetch();
         } catch (error) {
@@ -160,7 +179,22 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
 
     const handleClose = () => {
         setEventId(null);
-        setEvent(null);
+        setEvent({
+            sport_id: selectedSport?.id || 1,
+            name: '',
+            description: '',
+            event_type: 'single',
+            status: '1',
+            location: '',
+            start_time: '',
+            end_time: '',
+            registration_start: '',
+            registration_end: '',
+            elimination_type: 'single_elimination',
+            number_of_teams: '',
+            teams_max: '',
+            round_robin: true,
+        });
         setOpenModal(false);
         setType('single');
         setTypeOfElimination('single_elimination');
@@ -191,6 +225,8 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             }));
         }
     }, [selectedSport]);
+
+    console.log("event", event);
 
     return (
         <>

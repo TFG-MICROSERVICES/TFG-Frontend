@@ -146,27 +146,6 @@ export default function TournamentMatches({ teams = [], event = {}, results = []
             </div>
           )}
         </div>
-
-        {/* Información adicional */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-xl font-bold mb-4">Información del torneo</h3>
-          <p className="text-gray-600 mb-4">
-            Los enfrentamientos mostrados corresponden a la ronda de <strong>{getRoundName(selectedRound)}</strong> del
-            torneo {event.name}.
-          </p>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            <Badge variant="outline" className="bg-amber-100 text-amber-800">
-              Pendiente
-            </Badge>
-            <Badge variant="outline" className="bg-blue-100 text-blue-800">
-              En curso
-            </Badge>
-            <Badge variant="outline" className="bg-green-100 text-green-800">
-              Completado
-            </Badge>
-          </div>
-        </div>
       </div>
     </div>
   )
