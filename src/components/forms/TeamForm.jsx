@@ -16,7 +16,7 @@ import { SportContext } from '@/context/SportContext';
 
 const initialTeam = {
     name: '',
-    sport_id: '',
+    sport_id: null,
     public: true,
 };
 
