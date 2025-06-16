@@ -179,6 +179,7 @@ export const Perfil = () => {
                                             label="Ciudad"
                                             required
                                             name="city"
+                                            disabled={!isEditing}
                                         />
                                         <Select
                                             defaultValue="Selecciona tu comunidad autónoma"

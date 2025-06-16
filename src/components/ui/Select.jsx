@@ -7,9 +7,9 @@ export const Select = ({ placeholder, options, disabled, required, label, name, 
 
     useEffect(() => {
         if (options && options.length > 0 && !formValue[name]) {
-            updateFormValue({ [name]: '' });
+            updateFormValue({ [name]: defaultValue || '' });
         }
-    }, [options]);
+    }, [options, defaultValue]);
 
     const updateRequest = ({ target }) => {
         if (!isTouchedInput) setIsTouchedInput(true);
@@ -28,14 +28,14 @@ export const Select = ({ placeholder, options, disabled, required, label, name, 
             </label>
             <select
                 className="border border-slate-400 h-10 w-full rounded-lg p-2 bg-white"
-                value={formValue[name] || ''}
+                value={formValue[name] || defaultValue || ''}
                 name={name}
                 disabled={isLoading || disabled}
                 required={required}
                 onChange={(event) => updateRequest(event)}
             >
                 {placeholder && <option value="">{placeholder}</option>}
-                {options && options.length> 0 && options.map((option) => (
+                {options && options.length > 0 && options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
                     </option>

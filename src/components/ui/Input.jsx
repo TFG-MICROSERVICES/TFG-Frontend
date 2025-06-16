@@ -25,7 +25,7 @@ export const Input = ({ type, name, placeholder, required = false, label, clase 
             </label>
             <input
                 disabled={isLoading || disabled}
-                className={`border border-slate-400 h-10 w-full rounded-lg p-2 ${clase}`}
+                className={`border border-slate-400 bg-white h-10 w-full rounded-lg p-2 ${clase}`}
                 placeholder={placeholder}
                 name={name}
                 type={type}
