@@ -131,7 +131,9 @@ export const LayoutBase = () => {
                                     teams,
                                     loadingTeams,
                                     events,
-                                    loadingEvents
+                                    loadingEvents,
+                                    fetchTeams,
+                                    fetchEvents
                                 }} />
                             </div>
                         </main>

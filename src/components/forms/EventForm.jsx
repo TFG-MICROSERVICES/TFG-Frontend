@@ -19,6 +19,7 @@ import { checkExistsNameEvent } from '@/api/request/post/events/checkExistsNameE
 import { formatDateTime } from '@/utils/formatTime';
 import { tournamentSchema, updateTournamentSchema } from '@/api/schemas/schemaTournament';
 import { leagueSchema, updateLeagueSchema } from '@/api/schemas/schemaLeague';
+import { useOutletContext } from 'react-router-dom';
 
 const initialValue = {
     
@@ -32,6 +33,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
     const [typeOfElimination, setTypeOfElimination] = useState('single_elimination');
     const [filteredSports, setFilteredSports] = useState([]);
     const { selectedSport } = useContext(SportContext);
+    const { fetchEvents } = useOutletContext();
 
     const [event, setEvent] = useState({
         sport_id: 1,
@@ -169,6 +171,7 @@ export const EventForm = ({ eventId = null, openModal, setOpenModal, refetch, se
             });
             setOpenModal(false);
             refetch && refetch();
+            fetchEvents && fetchEvents();
         } catch (error) {
             console.log(error);
             toast.error('Error al procesar el evento');

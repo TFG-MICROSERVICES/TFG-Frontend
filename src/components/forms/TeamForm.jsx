@@ -13,6 +13,7 @@ import { getSports } from '../../api/request/get/sports/getSports';
 import { UserTeam } from '../teams/UserTeam';
 import { LoginContext } from '../../context/LoginContext';
 import { SportContext } from '@/context/SportContext';
+import { useOutletContext } from 'react-router-dom';
 
 const initialTeam = {
     name: '',
@@ -28,6 +29,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
     const { login } = useContext(LoginContext);
     const { selectedSport } = useContext(SportContext);
     const [isCaptain, setIsCaptain] = useState(false);
+    const { fetchTeams } = useOutletContext();
 
     const fetchTeam = useCallback(async () => {
         try {
@@ -82,6 +84,7 @@ export const TeamForm = ({ teamId = null, openModal, refetch, closeModal }) => {
             setIsCaptain()
             closeModal();
             refetch && refetch();
+            fetchTeams && fetchTeams();
         } catch (error) {
             console.log(error);
         } finally {
